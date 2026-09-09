@@ -160,7 +160,7 @@ document.addEventListener("keydown", (event) => {
 // --- Chaos Pack ---
 const cableButton = document.getElementById("cableButton");
 const cableResult = document.getElementById("cableResult");
-const pepsiCans = document.querySelector(".pepsi-cans");
+const pepsiCans = document.querySelector("#coffeeStatus .pepsi-cans");
 const pepsiPercent = document.getElementById("pepsiPercent");
 const boostStatus = document.getElementById("boostStatus");
 const dontClick = document.getElementById("dontClick");
@@ -186,6 +186,34 @@ if (cableButton) {
       cableButton.disabled = false;
       cableButton.textContent = "⚡ PRØV IGEN";
     }, 1600);
+  });
+}
+
+
+let pepsiBoost = 0;
+if (pepsiCans) {
+  pepsiCans.style.cursor = "pointer";
+  pepsiCans.setAttribute("title", "Klik for Pepsi Max Boost");
+
+  pepsiCans.addEventListener("click", () => {
+    pepsiBoost++;
+    const current = parseInt(pepsiPercent.textContent, 10) || 87;
+    const value = Math.min(current + 11, 149);
+
+    pepsiPercent.textContent = value + "%";
+    pepsiCans.classList.remove("boosted");
+    void pepsiCans.offsetWidth;
+    pepsiCans.classList.add("boosted");
+
+    if (value >= 105) {
+      boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
+      boostStatus.classList.add("overpressure");
+      entrepreneurValue.textContent = "127%";
+      meterFill.style.width = "100%";
+    } else {
+      boostStatus.textContent = "PEPSI MAX TILFØRT";
+      boostStatus.classList.remove("overpressure");
+    }
   });
 }
 
