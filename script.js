@@ -41,21 +41,12 @@ recalculate.addEventListener("click", () => {
   }, 1800);
 });
 
-let logoClicks = 0;
-let logoTimer;
-
+// Logoet fungerer som et normalt link tilbage til forsiden.
+// Easter-egget er flyttet til Shift + klik, så almindelige klik altid virker.
 logo.addEventListener("click", (event) => {
-  event.preventDefault();
-  logoClicks += 1;
-  clearTimeout(logoTimer);
-
-  if (logoClicks >= 5) {
+  if (event.shiftKey) {
+    event.preventDefault();
     toast.classList.add("show");
-    logoClicks = 0;
     setTimeout(() => toast.classList.remove("show"), 2600);
   }
-
-  logoTimer = setTimeout(() => {
-    logoClicks = 0;
-  }, 1800);
 });
