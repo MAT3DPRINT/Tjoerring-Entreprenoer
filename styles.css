@@ -698,3 +698,7 @@ body.serious-mode{filter:grayscale(1)}
   .chaos-grid{grid-template-columns:1fr}
   .footer-toys{align-items:flex-start;flex-direction:column}
 }
+
+/* Pepsi Max Boost: én statisk dåse */
+.pepsi-cans-static{cursor:default!important;pointer-events:none}
+.pepsi-cans-static:active{transform:none!important}
