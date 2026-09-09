@@ -189,27 +189,6 @@ if (cableButton) {
   });
 }
 
-let pepsiBoost = 0;
-if (pepsiCans) {
-  pepsiCans.addEventListener("click", () => {
-    pepsiBoost++;
-    const value = Math.min(83 + pepsiBoost * 11, 149);
-    pepsiPercent.textContent = value + "%";
-    pepsiCans.classList.remove("boosted");
-    void pepsiCans.offsetWidth;
-    pepsiCans.classList.add("boosted");
-
-    if (value >= 105) {
-      boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
-      boostStatus.classList.add("overpressure");
-      entrepreneurValue.textContent = "127%";
-      meterFill.style.width = "100%";
-    } else {
-      boostStatus.textContent = "🥤 PEPSI MAX TILFØRT";
-    }
-  });
-}
-
 if (dontClick) {
   dontClick.addEventListener("click", () => {
     if (document.body.classList.contains("hole-chaos")) return;
