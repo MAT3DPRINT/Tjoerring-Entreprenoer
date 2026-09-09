@@ -59,25 +59,29 @@ function runHeroLogoEasterEgg() {
   if (!heroLogoCard || heroLogoBusy) return;
   heroLogoBusy = true;
 
-  heroLogoCard.classList.remove("effect-rumble", "effect-dump", "effect-surprise");
+  const steps = ["step-rumble","step-dump","step-surprise"];
+  heroLogoCard.classList.remove(...steps);
   void heroLogoCard.offsetWidth;
 
-  heroLogoCard.classList.add("effect-rumble");
+  // 1) Maskinen vågner: VRRRR...
+  heroLogoCard.classList.add("step-rumble");
 
+  // 2) Der dumpes jord hen over logoet
   setTimeout(() => {
-    heroLogoCard.classList.remove("effect-rumble");
-    heroLogoCard.classList.add("effect-dump");
-  }, 950);
+    heroLogoCard.classList.remove("step-rumble");
+    heroLogoCard.classList.add("step-dump");
+  }, 1200);
 
+  // 3) Solbriller, skilt, konfetti og punchline
   setTimeout(() => {
-    heroLogoCard.classList.remove("effect-dump");
-    heroLogoCard.classList.add("effect-surprise");
-  }, 1650);
+    heroLogoCard.classList.add("step-surprise");
+  }, 2450);
 
+  // 4) Tilbage til normalen efter et par sekunder
   setTimeout(() => {
-    heroLogoCard.classList.remove("effect-surprise");
+    heroLogoCard.classList.remove(...steps);
     heroLogoBusy = false;
-  }, 4700);
+  }, 6500);
 }
 
 if (heroLogoCard) {
