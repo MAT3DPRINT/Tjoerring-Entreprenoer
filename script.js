@@ -50,3 +50,42 @@ logo.addEventListener("click", (event) => {
     setTimeout(() => toast.classList.remove("show"), 2600);
   }
 });
+
+
+const heroLogoCard = document.getElementById("heroLogoCard");
+let heroLogoBusy = false;
+
+function runHeroLogoEasterEgg() {
+  if (!heroLogoCard || heroLogoBusy) return;
+  heroLogoBusy = true;
+
+  heroLogoCard.classList.remove("effect-rumble", "effect-dump", "effect-surprise");
+  void heroLogoCard.offsetWidth;
+
+  heroLogoCard.classList.add("effect-rumble");
+
+  setTimeout(() => {
+    heroLogoCard.classList.remove("effect-rumble");
+    heroLogoCard.classList.add("effect-dump");
+  }, 950);
+
+  setTimeout(() => {
+    heroLogoCard.classList.remove("effect-dump");
+    heroLogoCard.classList.add("effect-surprise");
+  }, 1650);
+
+  setTimeout(() => {
+    heroLogoCard.classList.remove("effect-surprise");
+    heroLogoBusy = false;
+  }, 4700);
+}
+
+if (heroLogoCard) {
+  heroLogoCard.addEventListener("click", runHeroLogoEasterEgg);
+  heroLogoCard.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      runHeroLogoEasterEgg();
+    }
+  });
+}
