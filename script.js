@@ -160,10 +160,9 @@ document.addEventListener("keydown", (event) => {
 // --- Chaos Pack ---
 const cableButton = document.getElementById("cableButton");
 const cableResult = document.getElementById("cableResult");
-const pepsiCans = document.querySelector("#coffeeStatus .pepsi-cans");
+const pepsiCans = document.querySelector(".pepsi-cans");
 const pepsiPercent = document.getElementById("pepsiPercent");
 const boostStatus = document.getElementById("boostStatus");
-const boostText = document.getElementById("boostText");
 const dontClick = document.getElementById("dontClick");
 const holeOverlay = document.getElementById("holeOverlay");
 const seriousMode = document.getElementById("seriousMode");
@@ -201,12 +200,12 @@ if (pepsiCans) {
     pepsiCans.classList.add("boosted");
 
     if (value >= 105) {
-      boostText.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
+      boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
       boostStatus.classList.add("overpressure");
       entrepreneurValue.textContent = "127%";
       meterFill.style.width = "100%";
     } else {
-      boostText.textContent = "PEPSI MAX TILFØRT";
+      boostStatus.textContent = "🥤 PEPSI MAX TILFØRT";
     }
   });
 }
