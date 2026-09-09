@@ -106,15 +106,15 @@
             </div>
             <div class="status-row">
               <span>Kaffe</span>
-              <strong>☕☕☕☕ 87%</strong>
+              <strong id="coffeeStatus">☕☕☕☕ 87%</strong>
             </div>
             <div class="status-row">
               <span>Diesel</span>
-              <strong>⛽ Det går nok</strong>
+              <strong id="dieselStatus">⛽ Det går nok</strong>
             </div>
             <div class="status-row">
               <span>Dagens plan</span>
-              <strong>❓ Ukendt</strong>
+              <strong id="planStatus">❓ Ukendt</strong>
             </div>
             <div class="status-row">
               <span>Gravemaskine</span>
@@ -132,6 +132,22 @@
             <p>fra dig</p>
             <button class="btn btn-yellow" type="button" id="recalculate">Beregn igen</button>
             <small>* Komplet opdigtet.</small>
+          </div>
+        </div>
+
+        <div class="fun-grid">
+          <div class="meter-card">
+            <span class="distance-label">ENTREPRENØR-O-METER™</span>
+            <div class="meter-value"><strong id="entrepreneurValue">103%</strong> ENTREPRENØR</div>
+            <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+            <div class="meter-labels"><span>Forsigtig</span><span>FULD SEND 🚜</span></div>
+          </div>
+
+          <div class="task-card">
+            <span class="distance-label">DAGENS HØJVIDENSKABELIGE OPGAVE</span>
+            <p id="randomTask">Der står en gammel terrasse i vejen.</p>
+            <button class="btn btn-yellow" type="button" id="taskGenerator">🚜 GIV OS EN OPGAVE</button>
+            <small>Arbejdsmiljøkoordinatoren er ikke blevet spurgt.</small>
           </div>
         </div>
       </div>
@@ -221,6 +237,22 @@
             <summary>Hvorfor siger I “Åh Nej”?</summary>
             <p>Det plejer kunden at gøre først.</p>
           </details>
+          <details>
+            <summary>Kan I grave et hul?</summary>
+            <p>Hvor stort?</p>
+          </details>
+          <details>
+            <summary>Kan I grave et meget stort hul?</summary>
+            <p>Nu begynder det at ligne noget.</p>
+          </details>
+          <details>
+            <summary>Hvad hvis der ligger et kabel?</summary>
+            <p>Det gjorde der.</p>
+          </details>
+          <details>
+            <summary>Hvornår kommer I?</summary>
+            <p>Åh nej... vi er allerede på vej.</p>
+          </details>
         </div>
       </div>
     </section>
@@ -260,6 +292,17 @@
   </div>
 
   <div class="toast" id="toast">Stop med at trykke på gravemaskinen.</div>
+
+  <div class="panic-sequence" id="panicSequence" aria-hidden="true">
+    <div class="panic-banner" id="panicBanner">🚨 TJØRRING ENTREPRENØR ER PÅ VEJ! 🚨</div>
+    <div class="panic-status" id="panicStatus">🚜 Gravemaskine startet...</div>
+  </div>
+
+  <div class="driveby" id="driveby" aria-hidden="true">
+    <div class="trackmarks">▰ ▰ ▰ ▰ ▰ ▰ ▰ ▰ ▰</div>
+    <div class="mini-excavator">🚜</div>
+    <div class="driveby-text">Bare rolig. Vi skulle den anden vej.</div>
+  </div>
 
   <script src="script.js"></script>
 </body>
