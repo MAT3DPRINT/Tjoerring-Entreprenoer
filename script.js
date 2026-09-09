@@ -109,7 +109,7 @@ const tasks = [
 
 function updateLiveNonsense() {
   const coffee = Math.floor(Math.random() * 18) + 82;
-  coffeeStatus.textContent = `🥫🥫🥫🥫 ${coffee}%`;
+  document.getElementById("pepsiPercent").textContent = `${coffee}%`;
   dieselStatus.textContent = diesels[Math.floor(Math.random() * diesels.length)];
   planStatus.textContent = plans[Math.floor(Math.random() * plans.length)];
 
