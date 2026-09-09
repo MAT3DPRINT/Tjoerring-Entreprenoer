@@ -381,3 +381,171 @@ footer{
   .rating-banner{align-items:flex-start;flex-direction:column}
   .cta-box{padding:28px 22px}
 }
+
+
+/* --- Stort logo Easter egg --- */
+.hero-logo-easteregg{
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.hero-logo-easteregg:hover{
+  transform:rotate(-1deg) translateY(-4px);
+  border-color:#5a4a00;
+  box-shadow:0 32px 85px rgba(0,0,0,.58),0 0 0 1px rgba(246,196,0,.12);
+}
+.hero-logo-easteregg:focus-visible{
+  outline:3px solid var(--yellow);
+  outline-offset:4px;
+}
+.hero-logo-stage{
+  position:relative;
+  min-height:250px;
+  display:grid;
+  place-items:center;
+  isolation:isolate;
+}
+.hero-logo-stage > img{
+  position:relative;
+  z-index:2;
+  transition:filter .25s ease;
+}
+.click-hint{
+  margin-top:12px;
+  color:#777;
+  font-size:12px;
+  text-align:center;
+  transition:color .2s ease;
+}
+.hero-logo-easteregg:hover .click-hint{color:var(--yellow)}
+
+.rumble-text{
+  position:absolute;
+  z-index:6;
+  left:9%;
+  top:7%;
+  color:#fff;
+  font-size:clamp(22px,3vw,36px);
+  font-weight:950;
+  font-style:italic;
+  transform:rotate(-12deg) scale(.5);
+  opacity:0;
+  text-shadow:3px 3px 0 #000;
+}
+.dirt-cloud{
+  position:absolute;
+  z-index:5;
+  inset:0;
+  pointer-events:none;
+}
+.dirt-cloud span{
+  position:absolute;
+  color:#8b5a20;
+  font-size:0;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#7b4d18;
+  box-shadow:0 0 18px rgba(173,112,35,.35);
+  opacity:0;
+}
+.dirt-cloud span:nth-child(1){left:18%;top:48%}
+.dirt-cloud span:nth-child(2){left:28%;top:58%;width:25px;height:25px}
+.dirt-cloud span:nth-child(3){left:40%;top:50%;width:13px;height:13px}
+.dirt-cloud span:nth-child(4){left:55%;top:61%;width:22px;height:22px}
+.dirt-cloud span:nth-child(5){left:68%;top:47%;width:15px;height:15px}
+.dirt-cloud span:nth-child(6){left:76%;top:57%;width:29px;height:29px}
+
+.surprise-sign{
+  position:absolute;
+  z-index:8;
+  right:3%;
+  top:7%;
+  width:min(210px,46%);
+  background:#5a3518;
+  color:#fff;
+  border:5px solid #2d190b;
+  box-shadow:0 12px 28px rgba(0,0,0,.45);
+  padding:15px 12px;
+  text-align:center;
+  transform:rotate(5deg) scale(.25);
+  opacity:0;
+}
+.surprise-sign::before,
+.surprise-sign::after{
+  content:"";
+  position:absolute;
+  top:-5px;
+  bottom:-5px;
+  width:5px;
+  background:#c19a6b;
+  opacity:.35;
+}
+.surprise-sign::before{left:28%}
+.surprise-sign::after{right:26%}
+.surprise-sign span{display:block;font-size:28px;margin-bottom:2px}
+.surprise-sign strong{display:block;color:var(--yellow);font-size:20px;line-height:1.05}
+.surprise-sign small{display:block;font-weight:950;margin-top:5px;font-size:13px}
+
+.hero-logo-easteregg.effect-rumble .hero-logo-stage > img{
+  animation:excavatorRumble .10s linear 13;
+}
+.hero-logo-easteregg.effect-rumble .rumble-text{
+  animation:rumbleText .95s ease both;
+}
+.hero-logo-easteregg.effect-dump .dirt-cloud span{
+  animation:dirtBurst .8s cubic-bezier(.2,.8,.25,1) both;
+}
+.hero-logo-easteregg.effect-dump .dirt-cloud span:nth-child(2){animation-delay:.04s}
+.hero-logo-easteregg.effect-dump .dirt-cloud span:nth-child(3){animation-delay:.08s}
+.hero-logo-easteregg.effect-dump .dirt-cloud span:nth-child(4){animation-delay:.12s}
+.hero-logo-easteregg.effect-dump .dirt-cloud span:nth-child(5){animation-delay:.16s}
+.hero-logo-easteregg.effect-dump .dirt-cloud span:nth-child(6){animation-delay:.20s}
+.hero-logo-easteregg.effect-surprise .surprise-sign{
+  animation:signPop .45s cubic-bezier(.2,1.4,.35,1) forwards;
+}
+.hero-logo-easteregg.effect-surprise{
+  animation:yellowGlow .9s ease-in-out infinite alternate;
+}
+.hero-logo-easteregg.effect-surprise .hero-logo-stage > img{
+  filter:drop-shadow(0 18px 22px rgba(0,0,0,.55)) sepia(.2) saturate(1.15);
+}
+
+@keyframes excavatorRumble{
+  0%{transform:translate(0,0) rotate(0)}
+  25%{transform:translate(-3px,2px) rotate(-.5deg)}
+  50%{transform:translate(3px,-2px) rotate(.5deg)}
+  75%{transform:translate(-2px,-1px) rotate(.2deg)}
+  100%{transform:translate(2px,2px) rotate(-.2deg)}
+}
+@keyframes rumbleText{
+  0%{opacity:0;transform:rotate(-12deg) scale(.4)}
+  20%,70%{opacity:1;transform:rotate(-12deg) scale(1)}
+  100%{opacity:0;transform:rotate(-7deg) scale(1.25)}
+}
+@keyframes dirtBurst{
+  0%{opacity:0;transform:translate(0,35px) scale(.35)}
+  18%{opacity:1}
+  60%{opacity:.95;transform:translate(calc((var(--dx,1))*22px),-62px) scale(1.3)}
+  100%{opacity:0;transform:translate(calc((var(--dx,1))*45px),55px) scale(.7)}
+}
+.dirt-cloud span:nth-child(odd){--dx:-1}
+.dirt-cloud span:nth-child(even){--dx:1}
+@keyframes signPop{
+  0%{opacity:0;transform:rotate(5deg) scale(.25)}
+  75%{opacity:1;transform:rotate(-3deg) scale(1.08)}
+  100%{opacity:1;transform:rotate(2deg) scale(1)}
+}
+@keyframes yellowGlow{
+  from{box-shadow:0 28px 70px rgba(0,0,0,.5),0 0 0 rgba(246,196,0,0)}
+  to{box-shadow:0 28px 70px rgba(0,0,0,.5),0 0 38px rgba(246,196,0,.35)}
+}
+
+@media(max-width:620px){
+  .hero-logo-stage{min-height:200px}
+  .surprise-sign{right:0;top:0;width:48%;padding:10px 8px}
+  .surprise-sign strong{font-size:16px}
+  .surprise-sign small{font-size:11px}
+}
