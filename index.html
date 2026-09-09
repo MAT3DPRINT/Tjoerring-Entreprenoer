@@ -158,6 +158,22 @@
             <small>Arbejdsmiljøkoordinatoren er ikke blevet spurgt.</small>
           </div>
         </div>
+
+        <div class="chaos-grid">
+          <div class="chaos-card">
+            <span class="distance-label">⚡ KABEL-LOTTERIET™</span>
+            <h3>Ligger der et kabel?</h3>
+            <p id="cableResult">Der er kun én videnskabelig måde at finde ud af det på.</p>
+            <button class="btn btn-yellow" id="cableButton" type="button">⚡ UNDERSØG JORDEN</button>
+          </div>
+
+          <div class="chaos-card">
+            <span class="distance-label">🥤 PEPSI MAX BOOST</span>
+            <h3>Produktivitetskontrol</h3>
+            <p>Klik på Pepsi Max-dåserne ovenfor. Mere Pepsi Max = mere entreprenør.</p>
+            <div class="boost-status" id="boostStatus">NORMAL DRIFT</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -211,6 +227,25 @@
         <div class="rating-banner">
           <strong>4,9 / 5</strong>
           <span>baseret på anmeldelser, vi selv har skrevet.</span>
+        </div>
+
+        <div class="cards three bonus-reviews">
+          <article class="review">
+            <div class="stars">★★★★★</div>
+            <blockquote>“Bad om et lille hul. Fik et stort hul. 10/10.”</blockquote>
+            <cite>— Brian</cite>
+          </article>
+          <article class="review">
+            <div class="stars">★☆☆☆☆</div>
+            <blockquote>“Min hæk er væk.”</blockquote>
+            <cite>— Naboen</cite>
+            <p class="company-reply"><strong>Svar fra Tjørring Entreprenør:</strong> Tak for din feedback. Vi fandt den.</p>
+          </article>
+          <article class="review">
+            <div class="stars">★★★★★</div>
+            <blockquote>“De kom til tiden. Det var faktisk lidt mistænkeligt.”</blockquote>
+            <cite>— Anonym</cite>
+          </article>
         </div>
       </div>
     </section>
@@ -278,6 +313,13 @@
   </main>
 
   <footer>
+    <div class="container footer-toys">
+      <button class="dont-click" id="dontClick" type="button">⚠️ TRYK IKKE HER</button>
+      <label class="serious-toggle">
+        <input type="checkbox" id="seriousMode">
+        <span>Professionel hjemmeside</span>
+      </label>
+    </div>
     <div class="container footer-grid">
       <div>
         <strong>Tjørring Entreprenør™</strong>
@@ -304,6 +346,16 @@
   <div class="panic-sequence" id="panicSequence" aria-hidden="true">
     <div class="panic-banner" id="panicBanner">🚨 TJØRRING ENTREPRENØR ER PÅ VEJ! 🚨</div>
     <div class="panic-status" id="panicStatus">🚜 Gravemaskine startet...</div>
+  </div>
+
+  <div class="hole-overlay" id="holeOverlay" aria-hidden="true">
+    <div class="site-hole" id="siteHole"></div>
+    <div class="hole-message" id="holeMessage">🕳️ Undskyld. Vi kom til at grave i hjemmesiden.</div>
+  </div>
+
+  <div class="serious-message" id="seriousMessage" aria-hidden="true">
+    <strong>PROFESSIONEL TILSTAND</strong>
+    <span>Ingen jokes. Ingen panik. Ingen dårlige beslutninger.</span>
   </div>
 
   <div class="driveby" id="driveby" aria-hidden="true">
