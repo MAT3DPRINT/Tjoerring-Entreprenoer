@@ -111,9 +111,10 @@ function updateLiveNonsense() {
   const coffee = Math.floor(Math.random() * 18) + 82;
   document.getElementById("pepsiPercent").textContent = `${coffee}%`;
 
-  if (coffee < 100 && boostStatus) {
-    boostStatus.textContent = "NORMAL DRIFT";
-    boostStatus.classList.remove("overpressure");
+  const currentBoostStatus = document.getElementById("boostStatus");
+  if (coffee < 100 && currentBoostStatus) {
+    currentBoostStatus.textContent = "NORMAL DRIFT";
+    currentBoostStatus.classList.remove("overpressure");
   }
 
   dieselStatus.textContent = diesels[Math.floor(Math.random() * diesels.length)];
@@ -211,7 +212,7 @@ if (pepsiCans) {
     void pepsiCans.offsetWidth;
     pepsiCans.classList.add("boosted");
 
-    if (value >= 105) {
+    if (value > 100) {
       boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
       boostStatus.classList.add("overpressure");
       entrepreneurValue.textContent = "127%";
