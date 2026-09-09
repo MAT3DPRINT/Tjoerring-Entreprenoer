@@ -30,7 +30,7 @@ function runPanicSequence() {
   const stages = [
     "🚜 Gravemaskine startet...",
     "💨 Fuld gas...",
-    "☕ Kaffen er sikret...",
+    "🥤 Pepsi Max er sikret...",
     "⚠️ Naboen er informeret...",
     "✅ For sent at fortryde."
   ];
@@ -91,7 +91,7 @@ const plans = [
   "❓ Ukendt",
   "🕳️ Grave noget",
   "👀 Kigge ned i et hul",
-  "☕ Strategisk kaffepause",
+  "🥤 Strategisk Pepsi Max-pause",
   "🚜 FULD SEND",
   "📏 Måle to gange. Grave tre."
 ];
@@ -109,7 +109,7 @@ const tasks = [
 
 function updateLiveNonsense() {
   const coffee = Math.floor(Math.random() * 18) + 82;
-  coffeeStatus.textContent = `☕☕☕☕ ${coffee}%`;
+  coffeeStatus.textContent = `🥤 Pepsi Max ${coffee}%`;
   dieselStatus.textContent = diesels[Math.floor(Math.random() * diesels.length)];
   planStatus.textContent = plans[Math.floor(Math.random() * plans.length)];
 
