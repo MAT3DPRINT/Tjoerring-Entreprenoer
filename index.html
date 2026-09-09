@@ -31,67 +31,76 @@
   </header>
 
   <main id="top">
-    <section class="hero section-dark">
-      <div class="container hero-grid">
-        <div class="hero-copy">
+    <section class="hero cinematic-hero section-dark">
+      <div class="hero-smoke hero-smoke-left"></div>
+      <div class="hero-smoke hero-smoke-right"></div>
+
+      <div class="container cinematic-top">
+        <div class="cinematic-copy">
           <p class="eyebrow">Tjørring · Herning · Omegn · Måske</p>
-          <h1>
-            <span class="yellow">ÅH NEJ...</span><br>
-            TJØRRING<br>
-            ENTREPRENØR<br>
-            <span class="small-line">ER PÅ VEJ.</span>
-          </h1>
-
-          <p class="hero-text">
-            Vi ved ikke helt hvorhen endnu, men maskinen er startet.
-          </p>
-
-          <div class="hero-actions">
-            <a class="btn btn-yellow" href="#live">🚜 HVOR ER DE NU?</a>
-            <button class="btn btn-outline panic-btn" type="button">🚨 PANIK!</button>
-          </div>
-
-          <div class="micro-copy">
-            * Forventet ankomsttid kan variere med kaffeindtag, dieselpris og humør.
-          </div>
+          <h1><span class="yellow">TJØRRING</span><br>ENTREPRENØR</h1>
+          <p class="hero-text">Stærke løsninger<br>– fra jord til færdigt resultat.</p>
+          <a class="btn btn-yellow" href="#kompetencer">Se vores kompetencer <span>→</span></a>
         </div>
 
-        <div class="hero-card hero-logo-easteregg" id="heroLogoCard" role="button" tabindex="0" aria-label="Klik på det store Tjørring Entreprenør-logo">
-          <div class="hero-logo-stage">
-            <img src="assets/logo.png" alt="Tjørring Entreprenør" id="heroLogoImage">
-
-            <div class="rumble-text" aria-hidden="true">VRRRR...</div>
-            <div class="dump-text" aria-hidden="true">DUMPT!</div>
-
-            <div class="dirt-pile" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span>
-            </div>
-
-            <div class="dirt-cloud" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-
-            <div class="cool-glasses" aria-hidden="true">😎</div>
-
-            <div class="surprise-sign" aria-hidden="true">
-              <strong>INGEN PANIK!</strong>
-              <small>VI GRAVER DET!</small>
-              <b>ツ</b>
-            </div>
-
-            <div class="final-joke" aria-hidden="true">
-              <strong>DET SER STADIG GODT UD</strong>
-              <span>– OGSÅ NÅR VI GRAVER LIDT I DET! 😎</span>
-            </div>
-
-            <div class="confetti" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
+        <div class="hero-center-wrap">
+          <div class="click-callout" aria-hidden="true">
+            <span>KLIK PÅ LOGOET<br>OG SE HVAD DER SKER!</span>
+            <b>↙</b>
           </div>
 
-          <div class="hero-card-slogan">Åh Nej · Tjørring Entreprenør Er På Vej</div>
-          <div class="click-hint">👆 Klik på logoet — hvis du tør</div>
+          <div class="hero-card hero-logo-easteregg" id="heroLogoCard" role="button" tabindex="0" aria-label="Klik på det store Tjørring Entreprenør-logo">
+            <div class="hero-logo-stage">
+              <img src="assets/logo.png" alt="Tjørring Entreprenør" id="heroLogoImage">
+              <div class="rumble-text" aria-hidden="true">VRRRR...</div>
+              <div class="dump-text" aria-hidden="true">DUMPT!</div>
+              <div class="dirt-pile" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="dirt-cloud" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="cool-glasses" aria-hidden="true">😎</div>
+              <div class="surprise-sign" aria-hidden="true"><strong>INGEN PANIK!</strong><small>VI GRAVER DET!</small><b>ツ</b></div>
+              <div class="final-joke" aria-hidden="true"><strong>DET SER STADIG GODT UD</strong><span>– OGSÅ NÅR VI GRAVER LIDT I DET! 😎</span></div>
+              <div class="confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="hero-card-slogan">Åh Nej · Tjørring Entreprenør Er På Vej</div>
+          </div>
         </div>
+      </div>
+
+      <div class="container storyboard" aria-label="Sådan virker logo-animationen">
+        <div class="story-step">
+          <div class="story-card"><img src="assets/logo.png" alt=""></div>
+          <p><strong>1.</strong> Du klikker på logoet</p>
+        </div>
+        <div class="story-arrow">➜</div>
+
+        <div class="story-step">
+          <div class="story-card story-rumble"><span>VRRRR...</span><img src="assets/logo.png" alt=""></div>
+          <p><strong>2.</strong> Logoet vågner til live...</p>
+        </div>
+        <div class="story-arrow">➜</div>
+
+        <div class="story-step">
+          <div class="story-card story-dump"><span>DUMPT!</span><img src="assets/logo.png" alt=""><div class="mini-dirt"></div></div>
+          <p><strong>3.</strong> Der sker noget...</p>
+        </div>
+        <div class="story-arrow">➜</div>
+
+        <div class="story-step wide-step">
+          <div class="story-card story-surprise"><span class="mini-sign">INGEN PANIK!<br>VI GRAVER DET!</span><img src="assets/logo.png" alt=""><div class="mini-confetti">◆ ◆ ◆ ◆ ◆</div></div>
+          <p><strong>4.</strong> En lille overraskelse! 😎</p>
+        </div>
+        <div class="story-arrow">➜</div>
+
+        <div class="story-step">
+          <div class="story-card"><img src="assets/logo.png" alt=""></div>
+          <p><strong>5.</strong> Tilbage igen 👍</p>
+        </div>
+      </div>
+
+      <div class="container hero-motto">
+        <span></span>
+        <strong>🚜 GODT ARBEJDE GRAVER ALTID IGENNEM!</strong>
+        <span></span>
       </div>
     </section>
 
