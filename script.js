@@ -110,6 +110,12 @@ const tasks = [
 function updateLiveNonsense() {
   const coffee = Math.floor(Math.random() * 18) + 82;
   document.getElementById("pepsiPercent").textContent = `${coffee}%`;
+
+  if (coffee < 100 && boostStatus) {
+    boostStatus.textContent = "NORMAL DRIFT";
+    boostStatus.classList.remove("overpressure");
+  }
+
   dieselStatus.textContent = diesels[Math.floor(Math.random() * diesels.length)];
   planStatus.textContent = plans[Math.floor(Math.random() * plans.length)];
 
