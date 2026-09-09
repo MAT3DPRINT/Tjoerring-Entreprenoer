@@ -155,3 +155,116 @@ document.addEventListener("keydown", (event) => {
     }, 3200);
   }
 });
+
+
+// --- Chaos Pack ---
+const cableButton = document.getElementById("cableButton");
+const cableResult = document.getElementById("cableResult");
+const pepsiCans = document.querySelector(".pepsi-cans");
+const pepsiPercent = document.getElementById("pepsiPercent");
+const boostStatus = document.getElementById("boostStatus");
+const dontClick = document.getElementById("dontClick");
+const holeOverlay = document.getElementById("holeOverlay");
+const seriousMode = document.getElementById("seriousMode");
+const seriousMessage = document.getElementById("seriousMessage");
+
+const cableAnswers = [
+  "✅ Nej. Grav bare. Hvad kan gå galt?",
+  "👀 Måske. Det er spændende.",
+  "🤷 Spørg ikke os.",
+  "⚡ 73% sandsynlighed. Det er næsten sikkert nok.",
+  "💥 Det gjorde der.",
+  "📞 Ledningsejerregistret har forladt chatten."
+];
+
+if (cableButton) {
+  cableButton.addEventListener("click", () => {
+    cableButton.disabled = true;
+    cableResult.textContent = "📡 Scanner jorden med meget dyr fantasi...";
+    setTimeout(() => {
+      cableResult.textContent = cableAnswers[Math.floor(Math.random() * cableAnswers.length)];
+      cableButton.disabled = false;
+      cableButton.textContent = "⚡ PRØV IGEN";
+    }, 1600);
+  });
+}
+
+let pepsiBoost = 0;
+if (pepsiCans) {
+  pepsiCans.addEventListener("click", () => {
+    pepsiBoost++;
+    const value = Math.min(83 + pepsiBoost * 11, 149);
+    pepsiPercent.textContent = value + "%";
+    pepsiCans.classList.remove("boosted");
+    void pepsiCans.offsetWidth;
+    pepsiCans.classList.add("boosted");
+
+    if (value >= 105) {
+      boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
+      boostStatus.classList.add("overpressure");
+      entrepreneurValue.textContent = "127%";
+      meterFill.style.width = "100%";
+    } else {
+      boostStatus.textContent = "🥤 PEPSI MAX TILFØRT";
+    }
+  });
+}
+
+if (dontClick) {
+  dontClick.addEventListener("click", () => {
+    if (document.body.classList.contains("hole-chaos")) return;
+    document.body.classList.add("hole-chaos");
+    holeOverlay.classList.add("active");
+    holeOverlay.setAttribute("aria-hidden","false");
+    setTimeout(() => {
+      holeOverlay.classList.remove("active");
+      holeOverlay.setAttribute("aria-hidden","true");
+      document.body.classList.remove("hole-chaos");
+      toast.textContent = "🔧 Hjemmesiden er lappet. Nogenlunde.";
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+        toast.textContent = "Stop med at trykke på gravemaskinen.";
+      }, 2200);
+    }, 4700);
+  });
+}
+
+let seriousTimer;
+if (seriousMode) {
+  seriousMode.addEventListener("change", () => {
+    clearTimeout(seriousTimer);
+    if (seriousMode.checked) {
+      document.body.classList.add("serious-mode");
+      seriousMessage.classList.add("show");
+      seriousMessage.setAttribute("aria-hidden","false");
+      seriousTimer = setTimeout(() => {
+        seriousMode.checked = false;
+        document.body.classList.remove("serious-mode");
+        seriousMessage.querySelector("strong").textContent = "DET HER HOLDER VI IKKE UD.";
+        seriousMessage.querySelector("span").textContent = "Den fjollede hjemmeside er tilbage.";
+        setTimeout(() => {
+          seriousMessage.classList.remove("show");
+          seriousMessage.setAttribute("aria-hidden","true");
+          seriousMessage.querySelector("strong").textContent = "PROFESSIONEL TILSTAND";
+          seriousMessage.querySelector("span").textContent = "Ingen jokes. Ingen panik. Ingen dårlige beslutninger.";
+        }, 1800);
+      }, 5000);
+    } else {
+      document.body.classList.remove("serious-mode");
+      seriousMessage.classList.remove("show");
+    }
+  });
+}
+
+// Sjældent alternativ til PANIK-sekvensen.
+let panicCount = 0;
+panicButtons.forEach(btn => {
+  btn.addEventListener("mouseenter", () => {
+    panicCount++;
+    if (panicCount % 10 === 0) {
+      btn.textContent = "🥤 MANGLER PEPSI MAX";
+      setTimeout(() => btn.textContent = "🚨 PANIK!", 1800);
+    }
+  });
+});
