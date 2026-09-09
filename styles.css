@@ -513,3 +513,48 @@ body.full-send{animation:tinyRumble .12s linear 8}
   .fun-grid{grid-template-columns:1fr}
   .driveby-text{font-size:12px}
 }
+
+/* Pepsi Max dåser i Live Status */
+.pepsi-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pepsi-cans{display:inline-flex;align-items:center;gap:4px}
+.pepsi-cans i{
+  width:24px;height:42px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+  border-radius:5px 5px 4px 4px;
+  background:linear-gradient(90deg,#111 0%,#353535 28%,#0b0b0b 65%,#222 100%);
+  border:1px solid #555;
+  box-shadow:inset 0 2px 1px #888,inset 0 -2px 1px #050505,0 2px 4px #0008;
+  color:#fff;
+  font-style:normal;
+  font-size:5px;
+  font-weight:950;
+  letter-spacing:-.2px;
+  line-height:1;
+}
+.pepsi-cans i::before{
+  content:"";
+  width:14px;height:14px;
+  margin-bottom:2px;
+  border-radius:50%;
+  background:linear-gradient(#e32934 0 44%,#fff 45% 56%,#1769aa 57%);
+  transform:rotate(-10deg);
+  box-shadow:0 0 0 1px #eee9;
+}
+.pepsi-cans i::after{
+  content:"";
+  position:absolute;left:3px;right:3px;top:1px;height:2px;
+  border-radius:50%;
+  background:#aaa;
+}
+.pepsi-cans small{
+  display:block;
+  margin-top:1px;
+  color:#e32934;
+  font-size:5px;
+  font-weight:1000;
+}
+#pepsiPercent{font-size:inherit}
+@media(max-width:620px){
+  .pepsi-cans i{width:22px;height:39px}
+}
