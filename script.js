@@ -119,6 +119,26 @@ function updateLiveNonsense() {
 updateLiveNonsense();
 setInterval(updateLiveNonsense, 12000);
 
+// Dynamisk forventet ankomst: en humoristisk hverdag før i dag.
+// Mandag -> fredag, tirsdag -> mandag, onsdag -> tirsdag osv.
+const arrivalValue = Array.from(document.querySelectorAll('.status-row')).find(row =>
+  row.querySelector('span')?.textContent.trim() === 'Forventet ankomst'
+)?.querySelector('strong');
+
+function updateExpectedArrival() {
+  if (!arrivalValue) return;
+  const dayNames = ['søndag','mandag','tirsdag','onsdag','torsdag','fredag','lørdag'];
+  const today = new Date().getDay();
+  let targetDay = (today + 6) % 7;
+
+  // I weekenden holder vi fast i fredags-energien.
+  if (today === 0 || today === 6) targetDay = 5;
+
+  arrivalValue.textContent = `Fra nu til ${dayNames[targetDay]}`;
+}
+updateExpectedArrival();
+setInterval(updateExpectedArrival, 60 * 60 * 1000);
+
 taskGenerator.addEventListener("click", () => {
   randomTask.textContent = tasks[Math.floor(Math.random() * tasks.length)];
   taskGenerator.textContent = "GRAV FØRST – SPØRG BAGEFTER™";
