@@ -77,7 +77,6 @@ logo.addEventListener("click", (event) => {
   }
 });
 
-
 const coffeeStatus = document.getElementById("coffeeStatus");
 const dieselStatus = document.getElementById("dieselStatus");
 const planStatus = document.getElementById("planStatus");
@@ -135,7 +134,6 @@ function runDriveby() {
     driveby.setAttribute("aria-hidden","true");
   }, 7200);
 }
-// Første lille overraskelse efter 35 sekunder, derefter sjældent.
 setTimeout(runDriveby, 35000);
 setInterval(runDriveby, 90000);
 
@@ -155,7 +153,6 @@ document.addEventListener("keydown", (event) => {
     }, 3200);
   }
 });
-
 
 // --- Chaos Pack ---
 const cableButton = document.getElementById("cableButton");
@@ -188,7 +185,6 @@ if (cableButton) {
     }, 1600);
   });
 }
-
 
 let pepsiBoost = 0;
 if (pepsiCans) {
@@ -264,7 +260,6 @@ if (seriousMode) {
   });
 }
 
-// Sjældent alternativ til PANIK-sekvensen.
 let panicCount = 0;
 panicButtons.forEach(btn => {
   btn.addEventListener("mouseenter", () => {
@@ -275,3 +270,9 @@ panicButtons.forEach(btn => {
     }
   });
 });
+
+// Indlæs den rigtige, mekaniske besøgstæller.
+const visitorCounterScript = document.createElement("script");
+visitorCounterScript.src = "visitor-counter.js";
+visitorCounterScript.defer = true;
+document.body.appendChild(visitorCounterScript);
