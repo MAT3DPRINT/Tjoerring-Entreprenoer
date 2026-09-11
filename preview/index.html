@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <title>Tjørring Entreprenør – redesign preview</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;background:#090909;color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
+    body{overflow:hidden}
+    .preview-bar{height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;background:#111;border-bottom:1px solid #2a2a2a;font-size:12px}
+    .preview-bar strong{color:#f6c400;letter-spacing:.06em}
+    .preview-bar a{color:#aaa;text-decoration:none}
+    .preview-bar a:hover{color:#f6c400}
+    iframe{display:block;width:100%;height:calc(100vh - 44px);border:0;background:#090909}
+    @media(max-width:600px){.preview-bar{height:38px;padding:0 9px;font-size:10px}.preview-bar span{display:none}iframe{height:calc(100vh - 38px)}}
+  </style>
+</head>
+<body>
+  <div class="preview-bar">
+    <div><strong>PREVIEW</strong><span> · visitor-counter-redesign</span></div>
+    <a href="../">← Tilbage til main</a>
+  </div>
+  <iframe
+    title="Tjørring Entreprenør visitor-counter-redesign preview"
+    src="https://raw.githack.com/MAT3DPRINT/Tjoerring-Entreprenoer/visitor-counter-redesign/index.html"
+    loading="eager"
+    referrerpolicy="no-referrer">
+  </iframe>
+</body>
+</html>
