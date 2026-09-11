@@ -31,80 +31,80 @@
     .visitor-stat span{display:block;margin-top:6px;color:#a0a0a0;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
     .visitor-counter-foot{position:relative;z-index:2;margin-top:16px;color:#777;font-size:12px}
     .counter-error{color:#ffcf33!important}
-    @media(max-width:760px){.visitor-counter-section{padding:54px 0}.visitor-counter-wrap{width:calc(100% - 24px)}.visitor-counter-head{display:block}.visitor-counter-machine{padding:16px}.odometer{gap:3px;padding:10px 8px;min-height:82px}.odometer-digit{width:42px;height:62px;font-size:40px}.visitor-stats-grid{grid-template-columns:1fr 1fr}.visitor-counter-foot{align-items:flex-start;flex-direction:column}}
+
+    /* Flyt den hvide "professionel tilstand"-boks ned i footeren */
+    footer .footer-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:20px 28px;align-items:start}
+    footer .footer-warning{grid-column:1/-1;max-width:none}
+    .footer-message-slot{min-height:150px;display:flex;justify-content:flex-end;align-items:flex-start;overflow:hidden}
+    .footer-message-slot .serious-message,
+    .footer-message-slot .serious-message.show{
+      position:static!important;left:auto!important;top:auto!important;z-index:auto!important;
+      width:100%;max-width:300px;margin:0;
+      transform:translateX(120%)!important;opacity:0!important;
+      background:#fff;color:#111;border-radius:12px;padding:18px 20px;text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      transition:transform .55s cubic-bezier(.2,.85,.2,1),opacity .35s ease!important;
+      pointer-events:none;
+    }
+    .footer-message-slot .serious-message.footer-visible,
+    .footer-message-slot .serious-message.footer-visible.show{transform:translateX(0)!important;opacity:1!important}
+    .footer-message-slot .serious-message strong{display:block;margin-bottom:4px;color:#111}
+    .footer-message-slot .serious-message span{display:block;color:#555}
+    @media(max-width:760px){
+      .visitor-counter-section{padding:54px 0}.visitor-counter-wrap{width:calc(100% - 24px)}.visitor-counter-head{display:block}.visitor-counter-machine{padding:16px}.odometer{gap:3px;padding:10px 8px;min-height:82px}.odometer-digit{width:42px;height:62px;font-size:40px}.visitor-stats-grid{grid-template-columns:1fr 1fr}.visitor-counter-foot{align-items:flex-start;flex-direction:column}
+      footer .footer-grid{grid-template-columns:minmax(0,1fr) minmax(190px,260px);gap:18px}
+    }
+    @media(max-width:430px){footer .footer-grid{grid-template-columns:1fr}.footer-message-slot{min-height:120px;justify-content:flex-start}.footer-message-slot .serious-message{max-width:100%}.footer-warning{grid-column:auto!important}}
     @media(max-width:390px){.odometer-digit{width:36px;height:57px;font-size:34px}.visitor-counter-machine{padding:12px}.visitor-stat{padding:12px}.visitor-stat b{font-size:23px}}
   `;
   document.head.appendChild(style);
 
   const hero = document.querySelector(".hero");
-  if (!hero) return;
-
-  const section = document.createElement("section");
-  section.className = "visitor-counter-section";
-  section.id = "besog";
-  section.innerHTML = `
-    <div class="visitor-counter-wrap">
-      <div class="visitor-counter-head">
-        <div>
-          <p class="visitor-counter-kicker">📊 Helt ægte statistik*</p>
-          <h2>Hvor mange har kigget forbi?</h2>
-          <p>Vi tæller rigtige sidevisninger. Gravemaskinen tæller ikke som besøgende. Endnu.</p>
+  if (hero) {
+    const section = document.createElement("section");
+    section.className = "visitor-counter-section";
+    section.id = "besog";
+    section.innerHTML = `
+      <div class="visitor-counter-wrap">
+        <div class="visitor-counter-head"><div><p class="visitor-counter-kicker">📊 Helt ægte statistik*</p><h2>Hvor mange har kigget forbi?</h2><p>Vi tæller rigtige sidevisninger. Gravemaskinen tæller ikke som besøgende. Endnu.</p></div></div>
+        <div class="visitor-counter-machine">
+          <div class="visitor-counter-plate"><div class="visitor-counter-bolts"></div><strong>BESØGSMÅLER</strong><span>Siden vi begyndte at grave på internettet</span></div>
+          <div class="odometer" id="visitorOdometer" aria-label="Antal sidevisninger"><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span></div>
+          <div class="visitor-stats-grid">
+            <div class="visitor-stat"><b id="visitorTotal">–</b><span>Sidevisninger</span></div>
+            <div class="visitor-stat"><b id="visitorUnique">–</b><span>Unikke besøgende</span></div>
+            <div class="visitor-stat"><b id="visitorToday">–</b><span>Seneste 24 timer</span></div>
+            <div class="visitor-stat"><b id="visitorDevice">–</b><span>Besøg på denne enhed</span></div>
+          </div>
+          <div class="visitor-counter-foot"><span>* Tallene er rigtige. Kommentarerne er stadig stærkt tvivlsomme.</span></div>
         </div>
-      </div>
-      <div class="visitor-counter-machine">
-        <div class="visitor-counter-plate">
-          <div class="visitor-counter-bolts"></div>
-          <strong>BESØGSMÅLER</strong>
-          <span>Siden vi begyndte at grave på internettet</span>
-        </div>
-        <div class="odometer" id="visitorOdometer" aria-label="Antal sidevisninger"><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span></div>
-        <div class="visitor-stats-grid">
-          <div class="visitor-stat"><b id="visitorTotal">–</b><span>Sidevisninger</span></div>
-          <div class="visitor-stat"><b id="visitorUnique">–</b><span>Unikke besøgende</span></div>
-          <div class="visitor-stat"><b id="visitorToday">–</b><span>Seneste 24 timer</span></div>
-          <div class="visitor-stat"><b id="visitorDevice">–</b><span>Besøg på denne enhed</span></div>
-        </div>
-        <div class="visitor-counter-foot">
-          <span>* Tallene er rigtige. Kommentarerne er stadig stærkt tvivlsomme.</span>
-        </div>
-      </div>
-    </div>`;
-  hero.insertAdjacentElement("afterend", section);
+      </div>`;
+    hero.insertAdjacentElement("afterend", section);
 
-  const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
-  const getValue = async (url) => {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    return Number(data.value ?? data.count ?? 0);
-  };
+    const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
+    const getValue = async url => { const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(`HTTP ${r.status}`); const d = await r.json(); return Number(d.value ?? d.count ?? 0); };
+    const renderOdometer = value => { const el=document.getElementById("visitorOdometer"); const chars=String(Math.max(0,Math.floor(value))).padStart(6,"0").split(""); el.innerHTML=chars.map((c,i)=>`<span class="odometer-digit" style="animation-delay:${i*45}ms">${c}</span>`).join(""); };
+    let deviceVisits=Number(localStorage.getItem("tjoerring-device-visits")||0)+1; localStorage.setItem("tjoerring-device-visits",String(deviceVisits)); document.getElementById("visitorDevice").textContent=fmt(deviceVisits);
+    Promise.all([getValue(API),getValue(`${API}?readOnly=true&unique=true`),getValue(`${API}?readOnly=true&timeline=24h`)]).then(([total,unique,today])=>{document.getElementById("visitorTotal").textContent=fmt(total);document.getElementById("visitorUnique").textContent=fmt(unique);document.getElementById("visitorToday").textContent=fmt(today);renderOdometer(total);}).catch(()=>{document.getElementById("visitorTotal").textContent="OFFLINE";document.getElementById("visitorTotal").classList.add("counter-error");document.getElementById("visitorUnique").textContent="–";document.getElementById("visitorToday").textContent="–";document.getElementById("visitorOdometer").innerHTML='<span class="odometer-digit">O</span><span class="odometer-digit">F</span><span class="odometer-digit">F</span>';});
+  }
 
-  const renderOdometer = value => {
-    const el = document.getElementById("visitorOdometer");
-    const chars = String(Math.max(0, Math.floor(value))).padStart(6, "0").split("");
-    el.innerHTML = chars.map((char, i) => `<span class="odometer-digit" style="animation-delay:${i * 45}ms">${char}</span>`).join("");
-    el.setAttribute("aria-label", `${value} sidevisninger`);
-  };
+  /* Den hvide boks ligger nu i footerens højre felt og kommer først ind ved bunden. */
+  const seriousMessage = document.getElementById("seriousMessage");
+  const footerGrid = document.querySelector("footer .footer-grid");
+  if (seriousMessage && footerGrid) {
+    const slot = document.createElement("div");
+    slot.className = "footer-message-slot";
+    const warning = footerGrid.querySelector(".footer-warning");
+    footerGrid.insertBefore(slot, warning || null);
+    slot.appendChild(seriousMessage);
 
-  let deviceVisits = Number(localStorage.getItem("tjoerring-device-visits") || 0) + 1;
-  localStorage.setItem("tjoerring-device-visits", String(deviceVisits));
-  document.getElementById("visitorDevice").textContent = fmt(deviceVisits);
-
-  Promise.all([
-    getValue(API),
-    getValue(`${API}?readOnly=true&unique=true`),
-    getValue(`${API}?readOnly=true&timeline=24h`)
-  ]).then(([total, unique, today]) => {
-    document.getElementById("visitorTotal").textContent = fmt(total);
-    document.getElementById("visitorUnique").textContent = fmt(unique);
-    document.getElementById("visitorToday").textContent = fmt(today);
-    renderOdometer(total);
-  }).catch(err => {
-    console.warn("Besøgstæller kunne ikke hentes:", err);
-    document.getElementById("visitorTotal").textContent = "OFFLINE";
-    document.getElementById("visitorTotal").classList.add("counter-error");
-    document.getElementById("visitorUnique").textContent = "–";
-    document.getElementById("visitorToday").textContent = "–";
-    document.getElementById("visitorOdometer").innerHTML = `<span class="odometer-digit">O</span><span class="odometer-digit">F</span><span class="odometer-digit">F</span>`;
-  });
+    const updateFooterMessage = () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
+      seriousMessage.classList.toggle("footer-visible", atBottom);
+      seriousMessage.setAttribute("aria-hidden", atBottom ? "false" : "true");
+    };
+    window.addEventListener("scroll", updateFooterMessage, {passive:true});
+    window.addEventListener("resize", updateFooterMessage);
+    requestAnimationFrame(updateFooterMessage);
+  }
 })();
