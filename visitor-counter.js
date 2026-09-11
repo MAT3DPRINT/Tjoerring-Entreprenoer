@@ -11,7 +11,8 @@
     .visitor-counter-kicker{color:#f6c400;font-size:12px;font-weight:950;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px}
     .visitor-counter-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}
     .visitor-counter-head h2{margin:0;font-size:clamp(34px,5vw,58px);line-height:.95;letter-spacing:-.04em}
-    .visitor-counter-head p{margin:8px 0 0;color:#999;max-width:600px}
+    .visitor-counter-head p{margin:8px 0 0;color:#999;max-width:600px;transition:opacity .25s ease}
+    .visitor-counter-head p.is-changing{opacity:0}
     .visitor-counter-machine{position:relative;background:linear-gradient(145deg,#191919,#0d0d0d);border:1px solid #363636;border-radius:24px;padding:24px;box-shadow:0 24px 70px #0009,inset 0 0 0 1px #111;overflow:hidden}
     .visitor-counter-machine:before,.visitor-counter-machine:after{content:"";position:absolute;width:120px;height:18px;background:repeating-linear-gradient(135deg,#f6c400 0 18px,#111 18px 36px);opacity:.95}
     .visitor-counter-machine:before{left:-18px;top:16px;transform:rotate(-5deg)}
@@ -59,14 +60,14 @@
   `;
   document.head.appendChild(style);
 
-  const hero = document.querySelector(".hero");
-  if (hero) {
+  const footer = document.querySelector("footer");
+  if (footer) {
     const section = document.createElement("section");
     section.className = "visitor-counter-section";
     section.id = "besog";
     section.innerHTML = `
       <div class="visitor-counter-wrap">
-        <div class="visitor-counter-head"><div><p class="visitor-counter-kicker">📊 Helt ægte statistik*</p><h2>Hvor mange har kigget forbi?</h2><p>Vi tæller rigtige sidevisninger. Gravemaskinen tæller ikke som besøgende. Endnu.</p></div></div>
+        <div class="visitor-counter-head"><div><p class="visitor-counter-kicker">📊 Helt ægte statistik*</p><h2>Hvor mange har kigget forbi?</h2><p id="visitorIntroText">Vi tæller rigtige sidevisninger. Gravemaskinen tæller ikke som besøgende. Endnu.</p></div></div>
         <div class="visitor-counter-machine">
           <div class="visitor-counter-plate"><div class="visitor-counter-bolts"></div><strong>BESØGSMÅLER</strong><span>Siden vi begyndte at grave på internettet</span></div>
           <div class="odometer" id="visitorOdometer" aria-label="Antal sidevisninger"><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span><span class="odometer-digit">–</span></div>
@@ -79,7 +80,22 @@
           <div class="visitor-counter-foot"><span>* Tallene er rigtige. Kommentarerne er stadig stærkt tvivlsomme.</span></div>
         </div>
       </div>`;
-    hero.insertAdjacentElement("afterend", section);
+    footer.insertAdjacentElement("beforebegin", section);
+
+    const introText = document.getElementById("visitorIntroText");
+    const introMessages = [
+      "Vi tæller rigtige sidevisninger. Gravemaskinen tæller ikke som besøgende. Endnu.",
+      "Rigtige besøg. Rigtige visninger. Stadig stærkt tvivlsom entreprenør-humor."
+    ];
+    let introIndex = 0;
+    setInterval(() => {
+      introIndex = (introIndex + 1) % introMessages.length;
+      introText.classList.add("is-changing");
+      setTimeout(() => {
+        introText.textContent = introMessages[introIndex];
+        introText.classList.remove("is-changing");
+      }, 250);
+    }, 30000);
 
     const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
     const getValue = async url => { const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(`HTTP ${r.status}`); const d = await r.json(); return Number(d.value ?? d.count ?? 0); };
