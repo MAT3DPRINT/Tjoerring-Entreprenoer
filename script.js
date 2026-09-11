@@ -282,3 +282,9 @@ const translationScript = document.createElement("script");
 translationScript.src = "translations.js";
 translationScript.defer = true;
 document.body.appendChild(translationScript);
+
+// Indlæs den nye filosofi-sektion.
+const philosophyScript = document.createElement("script");
+philosophyScript.src = "philosophy.js";
+philosophyScript.defer = true;
+document.body.appendChild(philosophyScript);
