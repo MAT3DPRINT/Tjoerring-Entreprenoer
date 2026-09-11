@@ -3,7 +3,6 @@
   const ACTION = "view";
   const KEY = "tjoerring-entreprenoer-home";
   const API = `https://counterapi.com/api/${NS}/${ACTION}/${KEY}`;
-  const STATS_URL = `https://counterapi.com/stats/${NS}/${ACTION}/${KEY}`;
 
   const style = document.createElement("style");
   style.textContent = `
@@ -30,9 +29,7 @@
     .visitor-stat{background:#0f0f0f;border:1px solid #333;border-radius:14px;padding:17px;text-align:center;min-height:108px;display:flex;flex-direction:column;justify-content:center}
     .visitor-stat b{display:block;color:#f6c400;font-size:28px;line-height:1.1}
     .visitor-stat span{display:block;margin-top:6px;color:#a0a0a0;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
-    .visitor-counter-foot{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:16px;color:#777;font-size:12px}
-    .visitor-counter-foot a{color:#f6c400;text-decoration:none;font-weight:900}
-    .visitor-counter-foot a:hover{text-decoration:underline}
+    .visitor-counter-foot{position:relative;z-index:2;margin-top:16px;color:#777;font-size:12px}
     .counter-error{color:#ffcf33!important}
     @media(max-width:760px){.visitor-counter-section{padding:54px 0}.visitor-counter-wrap{width:calc(100% - 24px)}.visitor-counter-head{display:block}.visitor-counter-machine{padding:16px}.odometer{gap:3px;padding:10px 8px;min-height:82px}.odometer-digit{width:42px;height:62px;font-size:40px}.visitor-stats-grid{grid-template-columns:1fr 1fr}.visitor-counter-foot{align-items:flex-start;flex-direction:column}}
     @media(max-width:390px){.odometer-digit{width:36px;height:57px;font-size:34px}.visitor-counter-machine{padding:12px}.visitor-stat{padding:12px}.visitor-stat b{font-size:23px}}
@@ -69,7 +66,6 @@
         </div>
         <div class="visitor-counter-foot">
           <span>* Tallene er rigtige. Kommentarerne er stadig stærkt tvivlsomme.</span>
-          <a href="${STATS_URL}" target="_blank" rel="noopener noreferrer">Se rå statistik ↗</a>
         </div>
       </div>
     </div>`;
