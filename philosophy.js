@@ -6,140 +6,138 @@
     .philosophy-section{
       position:relative;
       overflow:hidden;
-      min-height:620px;
+      min-height:660px;
       display:grid;
       place-items:center;
       isolation:isolate;
-      background:
-        radial-gradient(circle at 76% 42%,rgba(246,196,0,.09),transparent 24%),
-        radial-gradient(circle at 18% 88%,rgba(255,255,255,.055),transparent 23%),
-        linear-gradient(115deg,#050505 0%,#111 48%,#080808 100%);
+      color:#fff;
+      background:#080808;
       border-top:1px solid #242424;
       border-bottom:1px solid #242424;
     }
-    .philosophy-section::before,
+    .philosophy-section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-3;
+      background-image:url("https://images.unsplash.com/photo-1780054984791-ef3f58ca753e?auto=format&fit=crop&fm=jpg&q=82&w=2400");
+      background-size:cover;
+      background-position:center 52%;
+      transform:scale(1.035);
+      filter:saturate(.72) contrast(1.14) brightness(.66);
+    }
     .philosophy-section::after{
       content:"";
       position:absolute;
+      inset:0;
+      z-index:-2;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.16) 24%,rgba(0,0,0,.24) 74%,rgba(0,0,0,.46)),
+        linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.18) 34%,rgba(0,0,0,.44) 100%),
+        radial-gradient(circle at 50% 42%,rgba(0,0,0,.08),rgba(0,0,0,.5) 76%);
+    }
+    .philosophy-hazard{
+      position:absolute;
       top:0;
       bottom:0;
-      width:34px;
+      width:40px;
       z-index:4;
-      opacity:.9;
+      opacity:.96;
       background:repeating-linear-gradient(135deg,var(--yellow) 0 18px,#111 18px 36px);
+      box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 24px rgba(0,0,0,.55);
     }
-    .philosophy-section::before{left:0}
-    .philosophy-section::after{right:0}
-    .philosophy-dirt{
-      position:absolute;
-      left:-4%;
-      right:-4%;
-      bottom:-78px;
-      height:240px;
-      z-index:1;
-      opacity:.9;
-      filter:contrast(1.15);
-      background:
-        radial-gradient(ellipse at 8% 55%,#30271d 0 8%,transparent 9%),
-        radial-gradient(ellipse at 21% 40%,#1d1813 0 11%,transparent 12%),
-        radial-gradient(ellipse at 35% 62%,#3b3022 0 10%,transparent 11%),
-        radial-gradient(ellipse at 52% 40%,#211b15 0 13%,transparent 14%),
-        radial-gradient(ellipse at 68% 55%,#443626 0 12%,transparent 13%),
-        radial-gradient(ellipse at 82% 35%,#211a13 0 13%,transparent 14%),
-        radial-gradient(ellipse at 95% 58%,#382b1f 0 10%,transparent 11%),
-        linear-gradient(#211a14,#090909);
-      transform:rotate(-1deg);
-    }
-    .philosophy-watermark{
-      position:absolute;
-      left:-80px;
-      top:50%;
-      width:min(430px,38vw);
-      transform:translateY(-50%) rotate(-7deg);
-      opacity:.13;
-      filter:grayscale(1) brightness(2.2) contrast(1.25);
-      z-index:0;
-      pointer-events:none;
-    }
-    .philosophy-smoke{
+    .philosophy-hazard.left{left:0}
+    .philosophy-hazard.right{right:0}
+    .philosophy-vignette{
       position:absolute;
       inset:0;
       z-index:0;
-      opacity:.45;
-      background:
-        radial-gradient(circle at 25% 30%,rgba(255,255,255,.05),transparent 18%),
-        radial-gradient(circle at 70% 28%,rgba(255,255,255,.035),transparent 22%),
-        radial-gradient(circle at 52% 68%,rgba(255,255,255,.04),transparent 24%);
-      filter:blur(14px);
+      pointer-events:none;
+      box-shadow:inset 0 0 90px 30px rgba(0,0,0,.78);
     }
     .philosophy-inner{
       position:relative;
-      z-index:3;
-      width:min(1120px,calc(100% - 92px));
+      z-index:2;
+      width:min(1180px,calc(100% - 120px));
       margin:auto;
-      padding:92px 28px 132px;
+      padding:92px 26px 118px;
       text-align:center;
     }
     .philosophy-kicker{
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:22px;
-      margin:0 auto 28px;
+      gap:28px;
+      margin:0 auto 32px;
       color:var(--yellow);
-      font-size:clamp(13px,1.35vw,18px);
+      font-size:clamp(13px,1.2vw,18px);
       font-weight:950;
-      letter-spacing:.42em;
+      letter-spacing:.43em;
       text-transform:uppercase;
+      text-shadow:0 4px 18px #000;
     }
     .philosophy-kicker::before,
     .philosophy-kicker::after{
       content:"";
-      width:110px;
-      max-width:12vw;
+      width:128px;
+      max-width:13vw;
       height:3px;
       background:var(--yellow);
+      box-shadow:0 2px 12px rgba(0,0,0,.75);
     }
     .philosophy-title{
       margin:0;
       text-transform:uppercase;
-      font-size:clamp(58px,8.2vw,126px);
-      line-height:.84;
-      letter-spacing:-.055em;
+      font-size:clamp(62px,8.8vw,136px);
+      line-height:.82;
+      letter-spacing:-.06em;
       font-weight:1000;
-      text-shadow:0 12px 34px rgba(0,0,0,.8);
+      text-shadow:0 8px 26px rgba(0,0,0,.88),0 2px 1px rgba(0,0,0,.65);
     }
     .philosophy-title .white{
       display:block;
-      color:#f1f1f1;
-      text-shadow:0 2px 0 #777,0 12px 34px rgba(0,0,0,.8);
+      color:#f5f5f2;
+      -webkit-text-stroke:1px rgba(0,0,0,.28);
+      text-shadow:0 3px 0 #777,0 9px 28px rgba(0,0,0,.9);
     }
     .philosophy-title .yellow-line{
       display:block;
       color:var(--yellow);
-      margin-top:8px;
+      margin-top:10px;
+      text-shadow:0 5px 0 rgba(94,72,0,.6),0 10px 28px rgba(0,0,0,.92);
     }
     .philosophy-subtitle{
-      margin:30px 0 0;
-      color:#e6e6e6;
-      font-size:clamp(19px,2vw,31px);
-      font-weight:500;
+      margin:34px 0 0;
+      color:#f0f0f0;
+      font-size:clamp(19px,2vw,30px);
+      font-weight:520;
+      text-shadow:0 3px 14px rgba(0,0,0,.95);
     }
     .philosophy-mini-excavator{
       display:inline-block;
-      margin-left:12px;
-      color:var(--yellow);
-      filter:grayscale(1) sepia(1) saturate(8) hue-rotate(350deg);
+      margin-left:13px;
+      transform:translateY(2px);
+      filter:drop-shadow(0 3px 5px rgba(0,0,0,.9));
+    }
+    .philosophy-ground-fade{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:170px;
+      z-index:1;
+      pointer-events:none;
+      background:linear-gradient(180deg,transparent,rgba(0,0,0,.12) 35%,rgba(0,0,0,.68) 100%);
     }
     @media (max-width:760px){
-      .philosophy-section{min-height:520px}
-      .philosophy-section::before,.philosophy-section::after{width:18px}
-      .philosophy-inner{width:calc(100% - 42px);padding:72px 10px 112px}
-      .philosophy-kicker{letter-spacing:.25em;gap:10px}
+      .philosophy-section{min-height:540px}
+      .philosophy-section::before{background-position:38% 50%;filter:saturate(.7) contrast(1.12) brightness(.6)}
+      .philosophy-hazard{width:18px}
+      .philosophy-inner{width:calc(100% - 42px);padding:72px 10px 104px}
+      .philosophy-kicker{letter-spacing:.24em;gap:10px;margin-bottom:24px}
       .philosophy-kicker::before,.philosophy-kicker::after{width:42px;max-width:none}
-      .philosophy-title{font-size:clamp(48px,16vw,78px)}
-      .philosophy-watermark{width:340px;left:-155px;opacity:.08}
-      .philosophy-subtitle{font-size:18px}
+      .philosophy-title{font-size:clamp(48px,16vw,80px)}
+      .philosophy-subtitle{font-size:18px;margin-top:26px}
     }
   `;
   document.head.appendChild(style);
@@ -148,9 +146,10 @@
   section.className = 'philosophy-section';
   section.setAttribute('aria-labelledby', 'philosophyTitle');
   section.innerHTML = `
-    <div class="philosophy-smoke" aria-hidden="true"></div>
-    <img class="philosophy-watermark" src="assets/logo-new.svg" alt="" aria-hidden="true">
-    <div class="philosophy-dirt" aria-hidden="true"></div>
+    <div class="philosophy-hazard left" aria-hidden="true"></div>
+    <div class="philosophy-hazard right" aria-hidden="true"></div>
+    <div class="philosophy-vignette" aria-hidden="true"></div>
+    <div class="philosophy-ground-fade" aria-hidden="true"></div>
     <div class="philosophy-inner">
       <div class="philosophy-kicker" data-philosophy-kicker>VORES FILOSOFI</div>
       <h2 class="philosophy-title" id="philosophyTitle">
