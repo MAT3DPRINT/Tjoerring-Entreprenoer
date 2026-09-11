@@ -276,3 +276,9 @@ const visitorCounterScript = document.createElement("script");
 visitorCounterScript.src = "visitor-counter.js";
 visitorCounterScript.defer = true;
 document.body.appendChild(visitorCounterScript);
+
+// Indlæs faste oversættelser og sprogknap på preview-versionen.
+const translationScript = document.createElement("script");
+translationScript.src = "translations.js";
+translationScript.defer = true;
+document.body.appendChild(translationScript);
