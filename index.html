@@ -222,6 +222,51 @@
       </div>
     </section>
 
+
+    <section class="section section-dark contractor-interactives" id="contractorInteractives" aria-labelledby="contractorQuizHeading">
+      <div class="container interactive-pair">
+        <article class="interactive-card" aria-labelledby="contractorQuizHeading">
+          <p class="section-tag">PERSONALEAFDELINGEN HAR EN TEST</p>
+          <h2 id="contractorQuizHeading">HVOR MEGET ENTREPRENØR ER DU?</h2>
+          <p class="interactive-note">Fem spørgsmål. Ingen gyldige kvalifikationer.</p>
+          <div id="quizFlow" data-tool-dynamic>
+            <div id="quizQuestions">
+              <p id="quizProgress" class="interactive-progress" aria-live="polite"></p>
+              <fieldset class="quiz-fieldset" aria-describedby="quizHint">
+                <legend id="quizQuestion" tabindex="-1"></legend>
+                <div class="interactive-choices"><label class="quiz-choice"><input type="radio" name="contractorAnswer" value="0"><span id="quizAnswer0"></span></label><label class="quiz-choice"><input type="radio" name="contractorAnswer" value="1"><span id="quizAnswer1"></span></label><label class="quiz-choice"><input type="radio" name="contractorAnswer" value="2"><span id="quizAnswer2"></span></label><label class="quiz-choice"><input type="radio" name="contractorAnswer" value="3"><span id="quizAnswer3"></span></label></div>
+              </fieldset>
+              <p class="interactive-note" id="quizHint"><span data-interactive-copy="Vælg ét svar for at fortsætte.">Vælg ét svar for at fortsætte.</span></p>
+              <button type="button" id="quizNext" class="btn btn-yellow" disabled>NÆSTE</button>
+            </div>
+            <div id="quizResult" hidden>
+              <p class="interactive-progress"><span data-interactive-copy="DOMMEN ER FALDET">DOMMEN ER FALDET</span></p>
+              <p id="quizPercent" class="quiz-percent"></p>
+              <h3 id="quizLevel" tabindex="-1"></h3>
+              <p id="quizVerdict" class="interactive-description"></p>
+              <p id="quizPepsi" class="interactive-note"></p>
+              <button type="button" id="quizReset" class="btn btn-yellow"><span data-interactive-copy="PRØV IGEN">PRØV IGEN</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="interactive-card emergency-card" aria-labelledby="emergencyHeading">
+          <p class="section-tag">BEREDSKAB UDEN GARANTI</p>
+          <h2 id="emergencyHeading">AKUT ENTREPRENØRHJÆLP</h2>
+          <p class="interactive-note">Kun humor. Ingen bestilling, kontakt eller udrykning.</p>
+          <div id="emergencyFlow" data-tool-dynamic>
+            <h3 id="emergencyPrompt" tabindex="-1"></h3>
+            <p id="emergencyDetail" class="interactive-description"></p>
+            <div data-emergency-step="start"><button type="button" id="emergencyStart" class="btn btn-yellow"><span data-interactive-copy="JEG HAR BRUG FOR EN GRAVEMASKINE NU">JEG HAR BRUG FOR EN GRAVEMASKINE NU</span></button></div>
+            <div data-emergency-step="pepsi" hidden class="emergency-yesno"><button type="button" id="emergencyYes" class="btn btn-yellow"><span data-interactive-copy="JA">JA</span></button><button type="button" id="emergencyNo" class="tool-reset"><span data-interactive-copy="NEJ">NEJ</span></button></div>
+            <div data-emergency-step="supply" hidden><button type="button" id="emergencySupply" class="btn btn-yellow"><span data-interactive-copy="JEG HAR SKAFFET PEPSI MAX">JEG HAR SKAFFET PEPSI MAX</span></button></div>
+            <div data-emergency-step="problem" hidden class="interactive-choices"><button type="button" class="emergency-choice" data-emergency-problem="0"><span data-interactive-copy="Der mangler et hul">Der mangler et hul</span></button><button type="button" class="emergency-choice" data-emergency-problem="1"><span data-interactive-copy="Hullet er for lille">Hullet er for lille</span></button><button type="button" class="emergency-choice" data-emergency-problem="2"><span data-interactive-copy="Der er noget i vejen">Der er noget i vejen</span></button><button type="button" class="emergency-choice" data-emergency-problem="3"><span data-interactive-copy="Kunden sagde: Det tager kun en time">Kunden sagde: Det tager kun en time</span></button><button type="button" class="emergency-choice" data-emergency-problem="4"><span data-interactive-copy="Jeg ved det ikke, men vi skal bruge en gravemaskine">Jeg ved det ikke, men vi skal bruge en gravemaskine</span></button></div>
+            <div data-emergency-step="diagnosis" hidden><button type="button" id="emergencySend" class="btn btn-yellow"><span data-interactive-copy="AKTIVÉR FULD SEND">AKTIVÉR FULD SEND</span></button></div>
+            <button type="button" id="emergencyReset" class="tool-reset emergency-reset" hidden><span data-interactive-copy="Start forfra">Start forfra</span></button>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section class="section section-yellow">
       <div class="container stats">
         <div>

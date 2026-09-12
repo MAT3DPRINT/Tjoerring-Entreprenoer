@@ -726,3 +726,31 @@ body.serious-mode{filter:grayscale(1)}
 body.serious-mode .digging-tools{display:none!important}
 @media(max-width:850px){.digging-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:520px){.hole-inputs{grid-template-columns:minmax(0,1fr)}.hole-calculator,.daily-excuse{padding:20px}.tool-actions{align-items:stretch;flex-direction:column}}
+
+/* Phase 2: compact, event-driven quiz and emergency help. */
+.contractor-interactives{border-top:1px solid #333}
+.interactive-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.interactive-card{min-width:0;padding:28px;background:#151515;border:1px solid #383838;border-top:4px solid var(--yellow);border-radius:14px;overflow-wrap:anywhere}
+.interactive-card h2{font-size:clamp(25px,3vw,36px);line-height:1.15;margin:12px 0 18px}
+.interactive-card h3,.quiz-fieldset legend{font-size:22px;line-height:1.4;font-weight:800}
+.interactive-note{font-size:14px;color:#bbb;line-height:1.6}
+.interactive-progress{font-size:13px;color:var(--yellow);font-weight:900;letter-spacing:.08em;margin-top:28px}
+.quiz-fieldset{border:0;padding:0;margin:0;min-width:0}
+.quiz-fieldset legend{padding:0;max-width:100%;margin-bottom:18px}
+.interactive-choices{display:grid;gap:10px}
+.quiz-choice,.emergency-choice{display:flex;gap:12px;align-items:center;min-height:52px;padding:14px;border:1px solid #666;border-radius:8px;background:#090909;color:#fff;text-align:left;cursor:pointer;line-height:1.5;transition:border-color .15s ease,background-color .15s ease}
+.quiz-choice:has(input:checked){border-color:var(--yellow);background:#29240b}
+.quiz-choice input{flex:0 0 auto;width:19px;height:19px;accent-color:var(--yellow)}
+.quiz-choice span{min-width:0}
+.interactive-card button{max-width:100%;min-height:48px;white-space:normal;overflow-wrap:anywhere}
+.interactive-card button:disabled{opacity:.5;cursor:not-allowed}
+.interactive-card :is(button,input,[tabindex]):focus-visible{outline:3px solid var(--yellow);outline-offset:4px}
+.quiz-percent{font-size:clamp(48px,6vw,76px);font-weight:950;line-height:1.1;color:var(--yellow);margin:26px 0;font-variant-numeric:tabular-nums}
+.interactive-description{font-size:18px;line-height:1.6;color:#eee}
+.emergency-yesno{display:flex;flex-wrap:wrap;gap:12px}
+.emergency-reset{margin-top:24px}
+.interactive-card [hidden]{display:none!important}
+body.serious-mode .contractor-interactives{display:none!important}
+@media(max-width:850px){.interactive-pair{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.interactive-card{padding:20px}.interactive-card .btn{width:100%}.quiz-fieldset legend,.interactive-card h3{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.quiz-choice,.emergency-choice{transition:none}}

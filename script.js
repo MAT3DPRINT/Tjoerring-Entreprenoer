@@ -369,3 +369,99 @@ document.body.appendChild(philosophyScript);
   document.addEventListener('tjoerring:languagechange',render);
   render();
 })();
+
+// Phase 2: local state, fixed controls and the existing explicit language event.
+(() => {
+  const root = document.getElementById('contractorInteractives');
+  if (!root) return;
+  const get = id => document.getElementById(id);
+  const t = value => window.TjoerringI18n?.text(value) || value;
+  const set = (id,text) => { const node = get(id); if (node.textContent !== text) node.textContent = text; };
+  const questions = [{"question":"Du ser et perfekt græsareal. Hvad tænker du?","answers":["Flot græs.","Der kunne måske være en terrasse.","Der mangler helt klart et hul.","Hvor er gravemaskinen?"]},{"question":"Kunden siger: Det er bare en lille opgave. Hvad gør du?","answers":["Tager det helt roligt.","Tager ekstra værktøj med.","Bestiller en container.","Ringer efter mere diesel og Pepsi Max."]},{"question":"Du finder et kabel i jorden. Hvad gør du?","answers":["Stopper og undersøger det.","Kigger lidt nærmere.","Siger: Det stod ikke på tegningen.","Råber: HVEM HAR LAGT DEN DER?"]},{"question":"Hvornår er et hul stort nok?","answers":["Når opgaven er løst.","Når kunden er tilfreds.","Når naboen begynder at kigge.","Det spørgsmål giver ingen mening."]},{"question":"Hvad er vigtigst på en arbejdsdag?","answers":["Planlægning.","Godt værktøj.","Gravemaskinen.","Pepsi Max og en dårlig idé."]}];
+  const levels = [["Kontormenneske","Du bruger ord som projektplan uden at grine."],["Lærling med potentiale","Du kigger stadig efter ledningsplaner. Det er sødt."],["Godkendt til mindre huller","Du må gerne få en skovl. Gravemaskinen venter lidt endnu."],["Professionel hullespecialist","Du er nu farligt tæt på at få lov til at vælge skovlstørrelse."],["FULD SEND","Du ser ikke problemer. Du ser jord, der endnu ikke er flyttet."],["TJØRRING ENTREPRENØR","Vi beklager. Der findes ingen behandling."]];
+  const problems = [["Der mangler et hul","Diagnose: Akut mangel på hul.","Heldigvis kan det behandles."],["Hullet er for lille","Diagnose: Klassisk undergravning.","Anbefalet behandling: Gør hullet større."],["Der er noget i vejen","Diagnose: Objekt placeret forkert.","Standardprocedure: Flyt det. Eventuelt med skovlen."],["Kunden sagde: Det tager kun en time","Diagnose: Urealistiske forventninger.","Forventet behandlingstid: Resten af dagen."],["Jeg ved det ikke, men vi skal bruge en gravemaskine","Diagnose: Perfekte arbejdsforhold.","Start maskinen."]];
+  const quiz = {currentQuestion:0,score:0,answers:Array(questions.length).fill(null)};
+  const emergency = {currentStep:'start',problem:null,pepsi:null};
+  const radios = [...root.querySelectorAll('input[name="contractorAnswer"]')];
+  function renderQuiz() {
+    const finished = quiz.currentQuestion === questions.length;
+    get('quizQuestions').hidden = finished;
+    get('quizResult').hidden = !finished;
+    if (!finished) {
+      const question = questions[quiz.currentQuestion];
+      set('quizProgress',t('Spørgsmål')+' '+(quiz.currentQuestion+1)+' '+t('af')+' '+questions.length);
+      set('quizQuestion',t(question.question));
+      radios.forEach((radio,i) => { radio.checked = quiz.answers[quiz.currentQuestion] === i; set('quizAnswer'+i,t(question.answers[i])); });
+      get('quizNext').disabled = quiz.answers[quiz.currentQuestion] === null;
+      set('quizNext',t(quiz.currentQuestion === questions.length-1 ? 'VIS DOMMEN' : 'NÆSTE'));
+    } else {
+      const percent = Math.round(quiz.score/(questions.length*3)*100);
+      const tier = percent === 100 ? 5 : percent > 80 ? 4 : percent > 60 ? 3 : percent > 40 ? 2 : percent > 20 ? 1 : 0;
+      set('quizPercent',percent+' %');
+      set('quizLevel',t(levels[tier][0]));
+      set('quizVerdict',t(levels[tier][1]));
+      set('quizPepsi',t('Pepsi Max-kompatibilitet')+': '+Math.round(20+percent*0.8)+' %');
+    }
+  }
+  function renderEmergency() {
+    const step = emergency.currentStep;
+    root.querySelectorAll('[data-emergency-step]').forEach(node => { node.hidden = node.dataset.emergencyStep !== step; });
+    get('emergencyReset').hidden = step === 'start';
+    const copy = {
+      start:['',''],
+      pepsi:['Rolig. Først det vigtigste: Er der Pepsi Max?',''],
+      supply:['⚠️ Situationen er mere alvorlig end først antaget.','Find Pepsi Max. Vi venter med at stille flere spørgsmål.'],
+      problem:['Hvad er problemet?',''],
+      diagnosis:problems[emergency.problem]?.slice(1) || ['',''],
+      sent:['🚜 FULD SEND AKTIVERET','En gravemaskine er nu følelsesmæssigt på vej.']
+    }[step];
+    get('emergencyPrompt').hidden = !copy[0];
+    get('emergencyDetail').hidden = !copy[1];
+    set('emergencyPrompt',t(copy[0]));
+    set('emergencyDetail',t(copy[1]));
+  }
+  function renderLanguage() {
+    root.querySelectorAll('[data-interactive-copy]').forEach(node => {
+      const text = t(node.dataset.interactiveCopy);
+      if (node.textContent !== text) node.textContent = text;
+    });
+    renderQuiz();renderEmergency();
+  }
+  radios.forEach((radio,i) => radio.addEventListener('change',() => {
+    if (quiz.currentQuestion >= questions.length || !radio.checked) return;
+    quiz.answers[quiz.currentQuestion] = i;
+    renderQuiz();
+  }));
+  get('quizNext').addEventListener('click',() => {
+    if (quiz.currentQuestion >= questions.length || quiz.answers[quiz.currentQuestion] === null) return;
+    quiz.currentQuestion++;
+    quiz.score = quiz.answers.reduce((sum,value) => sum+(value ?? 0),0);
+    renderQuiz();
+    get(quiz.currentQuestion === questions.length ? 'quizLevel' : 'quizQuestion').focus({preventScroll:true});
+  });
+  get('quizReset').addEventListener('click',() => {
+    if (quiz.currentQuestion !== questions.length) return;
+    quiz.currentQuestion = 0;quiz.score = 0;quiz.answers.fill(null);
+    renderQuiz();get('quizQuestion').focus({preventScroll:true});
+  });
+  function advanceEmergency(from,to,update) {
+    if (emergency.currentStep !== from) return;
+    if (update) update();
+    emergency.currentStep = to;renderEmergency();get('emergencyPrompt').focus({preventScroll:true});
+  }
+  get('emergencyStart').addEventListener('click',() => advanceEmergency('start','pepsi'));
+  get('emergencyYes').addEventListener('click',() => advanceEmergency('pepsi','problem',() => { emergency.pepsi = true; }));
+  get('emergencyNo').addEventListener('click',() => advanceEmergency('pepsi','supply',() => { emergency.pepsi = false; }));
+  get('emergencySupply').addEventListener('click',() => advanceEmergency('supply','problem',() => { emergency.pepsi = true; }));
+  root.querySelectorAll('[data-emergency-problem]').forEach(button => button.addEventListener('click',() => {
+    if (!emergency.pepsi) return;
+    advanceEmergency('problem','diagnosis',() => { emergency.problem = Number(button.dataset.emergencyProblem); });
+  }));
+  get('emergencySend').addEventListener('click',() => advanceEmergency('diagnosis','sent'));
+  get('emergencyReset').addEventListener('click',() => {
+    emergency.currentStep = 'start';emergency.problem = null;emergency.pepsi = null;
+    renderEmergency();get('emergencyStart').focus({preventScroll:true});
+  });
+  document.addEventListener('tjoerring:languagechange',renderLanguage);
+  renderLanguage();
+})();
