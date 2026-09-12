@@ -7,6 +7,42 @@
   };
 
   const entries = [
+    // Hole calculator and daily excuse, using the existing four-language registry.
+    ["⚠️ PLANLÆGNING MED FORBEHOLD","⚠️ PLANNING, ALLEGEDLY","⚠️ PLANUNG UNTER VORBEHALT","⚠️ PLANOWANIE Z ZASTRZEŻENIAMI"],
+    ["HVOR STORT ET HUL HAR DU EGENTLIG BRUG FOR?","HOW BIG A HOLE DO YOU REALLY NEED?","WIE GROSS MUSS DEIN LOCH EIGENTLICH SEIN?","JAK DUŻEJ DZIURY NAPRAWDĘ POTRZEBUJESZ?"],
+    ["Længde i meter","Length in metres","Länge in Metern","Długość w metrach"],
+    ["Bredde i meter","Width in metres","Breite in Metern","Szerokość w metrach"],
+    ["Dybde i meter","Depth in metres","Tiefe in Metern","Głębokość w metrach"],
+    ["Længde/bredde: 0–100 m. Dybde: 0–20 m. Tomme felter tæller som 0.","Length/width: 0–100 m. Depth: 0–20 m. Empty fields count as 0.","Länge/Breite: 0–100 m. Tiefe: 0–20 m. Leere Felder zählen als 0.","Długość/szerokość: 0–100 m. Głębokość: 0–20 m. Puste pola liczą się jako 0."],
+    ["trillebøre","wheelbarrows","Schubkarren","taczek"],
+    ["fantasitrailere","imaginary trailers","Fantasieanhänger","fikcyjnych przyczep"],
+    ["meget lange lørdage","very long Saturdays","sehr lange Samstage","bardzo długich sobót"],
+    ["Kun for sjov: 0,12 m³ pr. trillebør, 3 m³ pr. fantasitrailer og lørdag. Ikke en transport- eller vægtberegning.","Just for fun: 0.12 m³ per wheelbarrow, 3 m³ per imaginary trailer and Saturday. Not a transport or weight calculation.","Nur zum Spaß: 0,12 m³ pro Schubkarre, 3 m³ pro Fantasieanhänger und Samstag. Keine Transport- oder Gewichtsberechnung.","Tylko dla żartu: 0,12 m³ na taczkę, 3 m³ na fikcyjną przyczepę i sobotę. To nie obliczenia transportowe ani wagowe."],
+    ["GØR HULLET STØRRE","MAKE THE HOLE BIGGER","MACH DAS LOCH GRÖSSER","POWIĘKSZ DZIURĘ"],
+    ["Jeg fortryder","I regret this","Ich bereue es","Żałuję tego"],
+    ["AFDELINGEN FOR FORKLARINGER","DEPARTMENT OF EXPLANATIONS","ABTEILUNG FÜR ERKLÄRUNGEN","DZIAŁ WYJAŚNIEŃ"],
+    ["DAGENS UNDSKYLDNING","EXCUSE OF THE DAY","AUSREDE DES TAGES","WYMÓWKA DNIA"],
+    ["NY UNDSKYLDNING","NEW EXCUSE","NEUE AUSREDE","NOWA WYMÓWKA"],
+    ["Godkendt af ledelsen. Gyldig til næste spørgsmål.","Approved by management. Valid until the next question.","Von der Leitung genehmigt. Gültig bis zur nächsten Frage.","Zatwierdzone przez szefostwo. Ważne do następnego pytania."],
+    ["Det dér er næsten bare en aggressiv blomsterkrukke.","That is basically an aggressive flowerpot.","Das ist fast nur ein aggressiver Blumentopf.","To prawie tylko agresywna doniczka."],
+    ["Det starter altid sådan her.","It always starts like this.","So fängt es immer an.","Zawsze tak się zaczyna."],
+    ["Nu begynder naboen at blive nysgerrig.","Now the neighbour is getting curious.","Jetzt wird der Nachbar neugierig.","Teraz sąsiad zaczyna się interesować."],
+    ["Det her kræver mere end en skovl og optimisme.","This needs more than a shovel and optimism.","Das braucht mehr als eine Schaufel und Optimismus.","Tu potrzeba czegoś więcej niż łopaty i optymizmu."],
+    ["Kommunen vil muligvis gerne høre om det her.","The council might want to hear about this.","Die Gemeinde möchte davon vielleicht erfahren.","Gmina może chcieć o tym usłyszeć."],
+    ["Vi antager, at du har en gravemaskine. Og en plan. Forhåbentlig.","We assume you have an excavator. And a plan. Hopefully.","Wir nehmen an, du hast einen Bagger. Und einen Plan. Hoffentlich.","Zakładamy, że masz koparkę. I plan. Miejmy nadzieję."],
+    ["Sådan. Meget bedre.","There. Much better.","So. Viel besser.","Tak. Znacznie lepiej."],
+    ["Nu er hullet stort nok. Selv for os.","The hole is big enough now. Even for us.","Jetzt ist das Loch groß genug. Selbst für uns.","Dziura jest już wystarczająco duża. Nawet dla nas."],
+    ["Vi lader som om, det aldrig skete.","Let us pretend that never happened.","Tun wir so, als wäre das nie passiert.","Udawajmy, że to się nigdy nie wydarzyło."],
+    ["Maskinen skulle lige tænke.","The machine needed a moment to think.","Die Maschine musste kurz nachdenken.","Maszyna musiała chwilę pomyśleć."],
+    ["Jorden var hårdere end forventet.","The ground was harder than expected.","Der Boden war härter als erwartet.","Ziemia była twardsza, niż oczekiwano."],
+    ["Vi ventede på en Pepsi Max.","We were waiting for a Pepsi Max.","Wir haben auf eine Pepsi Max gewartet.","Czekaliśmy na Pepsi Max."],
+    ["Google Maps sagde drej til venstre.","Google Maps said turn left.","Google Maps sagte: links abbiegen.","Google Maps kazało skręcić w lewo."],
+    ["Det så nemmere ud på YouTube.","It looked easier on YouTube.","Auf YouTube sah es einfacher aus.","Na YouTube wyglądało to łatwiej."],
+    ["Der stod ikke noget om det kabel.","Nobody mentioned that cable.","Von dem Kabel stand da nichts.","O tym kablu nic nie było napisane."],
+    ["Nogen havde parkeret en gravemaskine i vejen.","Someone had parked an excavator in the way.","Jemand hatte einen Bagger in den Weg gestellt.","Ktoś zaparkował koparkę na drodze."],
+    ["Vi målte to gange. Det hjalp ikke.","We measured twice. It did not help.","Wir haben zweimal gemessen. Es hat nicht geholfen.","Zmierzyliśmy dwa razy. Nie pomogło."],
+    ["Det begyndte som en fem minutters opgave.","It started as a five-minute job.","Es fing als Fünf-Minuten-Aufgabe an.","Zaczęło się od zadania na pięć minut."],
+    ["Det var sådan, da vi kom.","It was like that when we arrived.","Das war schon so, als wir ankamen.","Tak już było, kiedy przyjechaliśmy."],
     ['⚠️ ADVARSEL: ENTREPRENØRMASKINER KAN FOREKOMME ⚠️','⚠️ WARNING: CONSTRUCTION MACHINERY MAY OCCUR ⚠️','⚠️ WARNUNG: BAUMASCHINEN KÖNNEN AUFTAUCHEN ⚠️','⚠️ UWAGA: MASZYNY BUDOWLANE MOGĄ SIĘ POJAWIĆ ⚠️'],
     ['Kompetencer','Skills','Leistungen','Umiejętności'],
     ['Live status','Live status','Live-Status','Status na żywo'],
@@ -197,7 +233,8 @@
     const original = node.nodeValue;
     const lead = original.match(/^\s*/)?.[0] || '';
     const trail = original.match(/\s*$/)?.[0] || '';
-    node.nodeValue = lead + keys.get(key)[currentLang] + trail;
+    const next = lead + keys.get(key)[currentLang] + trail;
+    if (node.nodeValue !== next) node.nodeValue = next;
   }
 
   function translateElement(root = document.body) {
@@ -206,20 +243,25 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const p = node.parentElement;
-        if (!p || ['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName) || p.closest('.language-menu')) return NodeFilter.FILTER_REJECT;
+        if (!p || ['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName) || p.closest('.language-menu, [data-tool-dynamic]')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
     let n;
     while ((n = walker.nextNode())) translateTextNode(n);
-    document.documentElement.lang = languages[currentLang].htmlLang;
+    if (document.documentElement.lang !== languages[currentLang].htmlLang) {
+      document.documentElement.lang = languages[currentLang].htmlLang;
+    }
     translating = false;
     updateSelector();
   }
 
   function updateSelector() {
     const btn = document.getElementById('languageButton');
-    if (btn) btn.innerHTML = `<span aria-hidden="true">🌐</span> ${languages[currentLang].flag} <span class="language-code">${currentLang.toUpperCase()}</span>`;
+    if (btn && btn.dataset.language !== currentLang) {
+      btn.dataset.language = currentLang;
+      btn.innerHTML = `<span aria-hidden="true">🌐</span> ${languages[currentLang].flag} <span class="language-code">${currentLang.toUpperCase()}</span>`;
+    }
     document.querySelectorAll('.language-option').forEach(el => el.classList.toggle('active', el.dataset.lang === currentLang));
   }
 
@@ -228,6 +270,7 @@
     currentLang = lang;
     localStorage.setItem('tjoerring-language', lang);
     translateElement();
+    document.dispatchEvent(new Event('tjoerring:languagechange'));
     document.getElementById('languageMenu')?.classList.remove('open');
     document.getElementById('languageButton')?.setAttribute('aria-expanded','false');
     document.body.classList.add('language-fade');
@@ -268,11 +311,14 @@
     if (translating) return;
     let changed = false;
     for (const m of mutations) {
+      const parent = m.target.nodeType === Node.TEXT_NODE ? m.target.parentElement : m.target;
+      if (parent.closest?.('[data-tool-dynamic]')) continue;
       if (m.type === 'characterData' || m.addedNodes.length) { changed = true; break; }
     }
     if (changed) requestAnimationFrame(() => translateElement());
   });
   observer.observe(document.body, { subtree:true, childList:true, characterData:true });
 
-  window.TjoerringI18n = { setLanguage, getLanguage: () => currentLang, languages };
+  window.TjoerringI18n = { setLanguage, getLanguage: () => currentLang, languages, text: value => keys.get(findKey(value))?.[currentLang] || value };
+  document.dispatchEvent(new Event('tjoerring:languagechange'));
 })();

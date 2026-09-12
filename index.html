@@ -182,6 +182,46 @@
       </div>
     </section>
 
+
+    <section class="section section-dark digging-tools" id="diggingTools" aria-labelledby="holeHeading">
+      <div class="container">
+        <p class="section-tag">⚠️ PLANLÆGNING MED FORBEHOLD</p>
+        <h2 id="holeHeading">HVOR STORT ET HUL HAR DU EGENTLIG BRUG FOR?</h2>
+        <div class="digging-grid">
+          <div class="hole-calculator">
+            <div class="hole-inputs">
+              <label for="holeLength"><span>Længde i meter</span><input id="holeLength" type="number" inputmode="decimal" min="0" max="100" step="any" value="4" aria-describedby="holeLimits"></label>
+              <label for="holeWidth"><span>Bredde i meter</span><input id="holeWidth" type="number" inputmode="decimal" min="0" max="100" step="any" value="3" aria-describedby="holeLimits"></label>
+              <label for="holeDepth"><span>Dybde i meter</span><input id="holeDepth" type="number" inputmode="decimal" min="0" max="20" step="any" value="0.7" aria-describedby="holeLimits"></label>
+            </div>
+            <p class="tool-note" id="holeLimits">Længde/bredde: 0–100 m. Dybde: 0–20 m. Tomme felter tæller som 0.</p>
+            <div class="hole-results" aria-live="polite" aria-atomic="true">
+              <p class="hole-volume"><strong id="holeVolume" data-tool-dynamic>8,4</strong> m³</p>
+              <ul class="hole-comparisons">
+                <li>≈ <strong id="holeBarrows" data-tool-dynamic>70</strong> <span>trillebøre</span></li>
+                <li>≈ <strong id="holeTrailers" data-tool-dynamic>3</strong> <span>fantasitrailere</span></li>
+                <li>≈ <strong id="holeSaturdays" data-tool-dynamic>3</strong> <span>meget lange lørdage</span></li>
+              </ul>
+              <p id="holeVerdict" data-tool-dynamic>Nu begynder naboen at blive nysgerrig.</p>
+            </div>
+            <p class="tool-note">Kun for sjov: 0,12 m³ pr. trillebør, 3 m³ pr. fantasitrailer og lørdag. Ikke en transport- eller vægtberegning.</p>
+            <div class="tool-actions">
+              <button class="btn btn-yellow" id="growHole" type="button">GØR HULLET STØRRE</button>
+              <button class="tool-reset" id="resetHole" type="button">Jeg fortryder</button>
+            </div>
+            <p class="tool-feedback" id="holeFeedback" data-tool-dynamic aria-live="polite"></p>
+          </div>
+          <aside class="daily-excuse" aria-labelledby="excuseHeading">
+            <p class="section-tag">AFDELINGEN FOR FORKLARINGER</p>
+            <h3 id="excuseHeading">DAGENS UNDSKYLDNING</h3>
+            <p id="dailyExcuse" data-tool-dynamic aria-live="polite" aria-atomic="true"></p>
+            <button class="btn btn-yellow" id="newExcuse" type="button">NY UNDSKYLDNING</button>
+            <p class="tool-note">Godkendt af ledelsen. Gyldig til næste spørgsmål.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <section class="section section-yellow">
       <div class="container stats">
         <div>

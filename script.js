@@ -308,3 +308,64 @@ const philosophyScript = document.createElement("script");
 philosophyScript.src = "philosophy.js";
 philosophyScript.defer = true;
 document.body.appendChild(philosophyScript);
+
+// Event-driven tools. Stable nodes; dynamic text is owned here, not by the observer.
+(() => {
+  if (!document.getElementById('diggingTools')) return;
+  const fields = ['holeLength','holeWidth','holeDepth'].map(id => document.getElementById(id));
+  const defaults = [4,3,0.7];
+  const limits = [100,100,20];
+  const verdicts = ["Det dér er næsten bare en aggressiv blomsterkrukke.","Det starter altid sådan her.","Nu begynder naboen at blive nysgerrig.","Det her kræver mere end en skovl og optimisme.","Kommunen vil muligvis gerne høre om det her.","Vi antager, at du har en gravemaskine. Og en plan. Forhåbentlig."];
+  const excuses = ["Maskinen skulle lige tænke.","Jorden var hårdere end forventet.","Vi ventede på en Pepsi Max.","Google Maps sagde drej til venstre.","Det så nemmere ud på YouTube.","Der stod ikke noget om det kabel.","Nogen havde parkeret en gravemaskine i vejen.","Vi målte to gange. Det hjalp ikke.","Det begyndte som en fem minutters opgave.","Det var sådan, da vi kom."];
+  let excuseIndex = Math.floor(Math.random() * excuses.length);
+  let feedback = '';
+  const t = value => window.TjoerringI18n?.text(value) || value;
+  const set = (id,value) => {
+    const node = document.getElementById(id);
+    if (node.textContent !== value) node.textContent = value;
+  };
+  const values = () => fields.map((field,i) => {
+    const value = field.valueAsNumber;
+    return Number.isFinite(value) ? Math.min(limits[i],Math.max(0,value)) : 0;
+  });
+  function render() {
+    const lang = window.TjoerringI18n?.getLanguage() || 'da';
+    const format = new Intl.NumberFormat(lang,{maximumFractionDigits:3});
+    const volume = values().reduce((a,b) => a*b,1);
+    set('holeVolume',format.format(volume));
+    set('holeBarrows',format.format(Math.ceil(volume/0.12)));
+    set('holeTrailers',format.format(Math.ceil(volume/3)));
+    set('holeSaturdays',format.format(Math.ceil(volume/3)));
+    const tier = [0.5,3,15,50,200].findIndex(limit => volume < limit);
+    set('holeVerdict',t(verdicts[tier < 0 ? 5 : tier]));
+    set('holeFeedback',t(feedback));
+    set('dailyExcuse',t(excuses[excuseIndex]));
+  }
+  fields.forEach((field,i) => {
+    field.addEventListener('input',() => {
+      // Keep an empty field editable; clamp finite out-of-range values immediately.
+      if (Number.isFinite(field.valueAsNumber) && (field.valueAsNumber < 0 || field.valueAsNumber > limits[i])) field.value = String(values()[i]);
+      feedback = '';
+      render();
+    });
+    field.addEventListener('change',() => { field.value = String(values()[i]); render(); });
+  });
+  document.getElementById('growHole').addEventListener('click',() => {
+    const before = values();
+    const after = before.map((value,i) => Math.min(limits[i],Math.round(value*1.1*1000)/1000));
+    fields.forEach((field,i) => { field.value = String(after[i]); });
+    feedback = after.some((v,i) => v > before[i]) ? 'Sådan. Meget bedre.' : 'Nu er hullet stort nok. Selv for os.';
+    render();
+  });
+  document.getElementById('resetHole').addEventListener('click',() => {
+    fields.forEach((field,i) => { field.value = String(defaults[i]); });
+    feedback = 'Vi lader som om, det aldrig skete.';
+    render();
+  });
+  document.getElementById('newExcuse').addEventListener('click',() => {
+    excuseIndex = (excuseIndex + 1 + Math.floor(Math.random()*(excuses.length-1))) % excuses.length;
+    render();
+  });
+  document.addEventListener('tjoerring:languagechange',render);
+  render();
+})();
