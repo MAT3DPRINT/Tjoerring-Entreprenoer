@@ -109,6 +109,11 @@ const tasks = [
 function updateLiveNonsense() {
   const coffee = Math.floor(Math.random() * 18) + 82;
   document.getElementById("pepsiPercent").textContent = `${coffee}%`;
+  const boost = document.getElementById("boostStatus");
+  if (coffee < 105 && boost?.classList.contains("overpressure")) {
+    boost.classList.remove("overpressure");
+    boost.textContent = "NORMAL DRIFT";
+  }
   dieselStatus.textContent = diesels[Math.floor(Math.random() * diesels.length)];
   planStatus.textContent = plans[Math.floor(Math.random() * plans.length)];
 
@@ -136,6 +141,13 @@ function runDriveby() {
 }
 setTimeout(runDriveby, 35000);
 setInterval(runDriveby, 90000);
+
+// Keep continuous effects at their current position while the tab is hidden.
+const updateAnimationVisibility = () => {
+  document.body.classList.toggle("animations-paused", document.visibilityState === "hidden");
+};
+document.addEventListener("visibilitychange", updateAnimationVisibility);
+updateAnimationVisibility();
 
 let typed = "";
 document.addEventListener("keydown", (event) => {

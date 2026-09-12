@@ -114,13 +114,23 @@
     footerGrid.insertBefore(slot, warning || null);
     slot.appendChild(seriousMessage);
 
+    let updateScheduled = false;
+    let wasAtBottom;
     const updateFooterMessage = () => {
+      updateScheduled = false;
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
+      if (atBottom === wasAtBottom) return;
+      wasAtBottom = atBottom;
       seriousMessage.classList.toggle("footer-visible", atBottom);
       seriousMessage.setAttribute("aria-hidden", atBottom ? "false" : "true");
     };
-    window.addEventListener("scroll", updateFooterMessage, {passive:true});
-    window.addEventListener("resize", updateFooterMessage);
-    requestAnimationFrame(updateFooterMessage);
+    const scheduleFooterMessage = () => {
+      if (updateScheduled) return;
+      updateScheduled = true;
+      requestAnimationFrame(updateFooterMessage);
+    };
+    window.addEventListener("scroll", scheduleFooterMessage, {passive:true});
+    window.addEventListener("resize", scheduleFooterMessage);
+    scheduleFooterMessage();
   }
 })();
