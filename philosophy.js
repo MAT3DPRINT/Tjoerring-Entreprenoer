@@ -170,13 +170,20 @@
     de:{k:'UNSERE PHILOSOPHIE',l1:'SPASS',l2:'HAT SEINEN PREIS.',s:'Aber das hat uns noch nie aufgehalten.'},
     pl:{k:'NASZA FILOZOFIA',l1:'DOBRA ZABAWA',l2:'KOSZTUJE.',s:'Ale to jeszcze nigdy nas nie powstrzymało.'}
   };
+  let lastLanguage;
   const applyLanguage = () => {
     const lang = (document.documentElement.lang || 'da').slice(0,2);
+    if (lang === lastLanguage) return;
     const t = copy[lang] || copy.da;
-    section.querySelector('[data-philosophy-kicker]').textContent = t.k;
-    section.querySelector('[data-philosophy-line1]').textContent = t.l1;
-    section.querySelector('[data-philosophy-line2]').textContent = t.l2;
-    section.querySelector('[data-philosophy-subtitle]').textContent = t.s;
+    const setText = (selector, text) => {
+      const element = section.querySelector(selector);
+      if (element.textContent !== text) element.textContent = text;
+    };
+    setText('[data-philosophy-kicker]', t.k);
+    setText('[data-philosophy-line1]', t.l1);
+    setText('[data-philosophy-line2]', t.l2);
+    setText('[data-philosophy-subtitle]', t.s);
+    lastLanguage = lang;
   };
   applyLanguage();
   new MutationObserver(applyLanguage).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});

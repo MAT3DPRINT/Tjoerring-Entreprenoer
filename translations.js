@@ -1,4 +1,5 @@
 (() => {
+  if (window.TjoerringI18n) return;
   const languages = {
     da: { label: 'Dansk', flag: '🇩🇰', htmlLang: 'da' },
     en: { label: 'English', flag: '🇬🇧', htmlLang: 'en' },
@@ -178,7 +179,6 @@
 
   let currentLang = localStorage.getItem('tjoerring-language') || new URLSearchParams(location.search).get('lang') || 'da';
   if (!languages[currentLang]) currentLang = 'da';
-  let translating = false;
 
   function findKey(text) {
     const clean = text.trim();
@@ -191,18 +191,20 @@
   }
 
   function translateTextNode(node) {
+    const parent = node.parentElement;
+    if (!parent || parent.closest('script, style, noscript, .language-switcher')) return;
     if (!node.nodeValue || !node.nodeValue.trim()) return;
     const key = findKey(node.nodeValue);
     if (!key) return;
     const original = node.nodeValue;
     const lead = original.match(/^\s*/)?.[0] || '';
     const trail = original.match(/\s*$/)?.[0] || '';
-    node.nodeValue = lead + keys.get(key)[currentLang] + trail;
+    const translatedValue = lead + keys.get(key)[currentLang] + trail;
+    if (node.nodeValue !== translatedValue) node.nodeValue = translatedValue;
   }
 
   function translateElement(root = document.body) {
     if (!root) return;
-    translating = true;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const p = node.parentElement;
@@ -212,9 +214,11 @@
     });
     let n;
     while ((n = walker.nextNode())) translateTextNode(n);
-    document.documentElement.lang = languages[currentLang].htmlLang;
-    translating = false;
-    updateSelector();
+  }
+
+  function updateHtmlLanguage() {
+    const lang = languages[currentLang].htmlLang;
+    if (document.documentElement.lang !== lang) document.documentElement.lang = lang;
   }
 
   function updateSelector() {
@@ -225,9 +229,14 @@
 
   function setLanguage(lang) {
     if (!languages[lang]) return;
+    const changed = currentLang !== lang;
     currentLang = lang;
     localStorage.setItem('tjoerring-language', lang);
-    translateElement();
+    if (changed) {
+      translateElement();
+      updateHtmlLanguage();
+      updateSelector();
+    }
     document.getElementById('languageMenu')?.classList.remove('open');
     document.getElementById('languageButton')?.setAttribute('aria-expanded','false');
     document.body.classList.add('language-fade');
@@ -263,14 +272,33 @@
 
   installSelector();
   translateElement();
+  updateHtmlLanguage();
 
+  const pendingNodes = new Set();
+  let updateScheduled = false;
   const observer = new MutationObserver(mutations => {
-    if (translating) return;
-    let changed = false;
     for (const m of mutations) {
-      if (m.type === 'characterData' || m.addedNodes.length) { changed = true; break; }
+      if (m.type === 'characterData') pendingNodes.add(m.target);
+      else m.addedNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ELEMENT_NODE) pendingNodes.add(node);
+      });
     }
-    if (changed) requestAnimationFrame(() => translateElement());
+    if (!pendingNodes.size || updateScheduled) return;
+    updateScheduled = true;
+    requestAnimationFrame(() => {
+      updateScheduled = false;
+      const nodes = new Set(pendingNodes);
+      pendingNodes.clear();
+      for (const node of nodes) {
+        if (!document.body.contains(node)) continue;
+        // An inserted subtree already includes its pending descendants.
+        let parent = node.parentNode;
+        while (parent && !nodes.has(parent)) parent = parent.parentNode;
+        if (parent) continue;
+        if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
+        else translateElement(node);
+      }
+    });
   });
   observer.observe(document.body, { subtree:true, childList:true, characterData:true });
 
