@@ -177,7 +177,13 @@
     ['da','en','de','pl'].forEach((lang, n) => reverse[lang].set(row[n].trim(), key));
   });
 
-  let currentLang = localStorage.getItem('tjoerring-language') || new URLSearchParams(location.search).get('lang') || 'da';
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch { return null; }
+  }
+  function safeSet(key, value) {
+    try { localStorage.setItem(key, value); } catch { /* Keep the current session usable. */ }
+  }
+  let currentLang = safeGet('tjoerring-language') || new URLSearchParams(location.search).get('lang') || 'da';
   if (!languages[currentLang]) currentLang = 'da';
 
   function findKey(text) {
@@ -231,7 +237,7 @@
     if (!languages[lang]) return;
     const changed = currentLang !== lang;
     currentLang = lang;
-    localStorage.setItem('tjoerring-language', lang);
+    safeSet('tjoerring-language', lang);
     if (changed) {
       translateElement();
       updateHtmlLanguage();

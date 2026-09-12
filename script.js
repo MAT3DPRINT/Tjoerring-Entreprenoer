@@ -6,6 +6,17 @@ const distance = document.getElementById("distance");
 const recalculate = document.getElementById("recalculate");
 const logo = document.getElementById("logo");
 const toast = document.getElementById("toast");
+const defaultToastText = "Stop med at trykke på gravemaskinen.";
+let toastTimer;
+function showToast(text, duration) {
+  clearTimeout(toastTimer);
+  toast.textContent = text;
+  toast.classList.add("show");
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+    toast.textContent = defaultToastText;
+  }, duration);
+}
 
 function openModal() {
   panicModal.classList.add("show");
@@ -57,12 +68,14 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeModal();
 });
 
+let recalculateTimer;
 recalculate.addEventListener("click", () => {
+  clearTimeout(recalculateTimer);
   const fakeDistance = (Math.random() * 8.7 + 0.3).toFixed(1).replace(".", ",");
   distance.textContent = `${fakeDistance} KM`;
   recalculate.textContent = "Meget videnskabeligt beregnet ✓";
 
-  setTimeout(() => {
+  recalculateTimer = setTimeout(() => {
     recalculate.textContent = "Beregn igen";
   }, 1800);
 });
@@ -72,8 +85,7 @@ recalculate.addEventListener("click", () => {
 logo.addEventListener("click", (event) => {
   if (event.shiftKey) {
     event.preventDefault();
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2600);
+    showToast(defaultToastText, 2600);
   }
 });
 
@@ -124,10 +136,12 @@ function updateLiveNonsense() {
 updateLiveNonsense();
 setInterval(updateLiveNonsense, 12000);
 
+let taskTimer;
 taskGenerator.addEventListener("click", () => {
+  clearTimeout(taskTimer);
   randomTask.textContent = tasks[Math.floor(Math.random() * tasks.length)];
   taskGenerator.textContent = "GRAV FØRST – SPØRG BAGEFTER™";
-  setTimeout(() => taskGenerator.textContent = "🚜 GIV OS EN OPGAVE", 1700);
+  taskTimer = setTimeout(() => taskGenerator.textContent = "🚜 GIV OS EN OPGAVE", 1700);
 });
 
 function runDriveby() {
@@ -150,18 +164,17 @@ document.addEventListener("visibilitychange", updateAnimationVisibility);
 updateAnimationVisibility();
 
 let typed = "";
+let fullSendTimer;
 document.addEventListener("keydown", (event) => {
   if (event.key.length !== 1) return;
   typed = (typed + event.key.toLowerCase()).slice(-4);
   if (typed === "grav") {
+    clearTimeout(fullSendTimer);
     document.body.classList.add("full-send");
-    toast.textContent = "⚠️ ENTREPRENØR MODE AKTIVERET — FULD SEND 🚜";
-    toast.classList.add("show");
+    showToast("⚠️ ENTREPRENØR MODE AKTIVERET — FULD SEND 🚜", 3200);
     runDriveby();
-    setTimeout(() => {
+    fullSendTimer = setTimeout(() => {
       document.body.classList.remove("full-send");
-      toast.classList.remove("show");
-      toast.textContent = "Stop med at trykke på gravemaskinen.";
     }, 3200);
   }
 });
@@ -235,50 +248,68 @@ if (dontClick) {
       holeOverlay.classList.remove("active");
       holeOverlay.setAttribute("aria-hidden","true");
       document.body.classList.remove("hole-chaos");
-      toast.textContent = "🔧 Hjemmesiden er lappet. Nogenlunde.";
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-        toast.textContent = "Stop med at trykke på gravemaskinen.";
-      }, 2200);
+      showToast("🔧 Hjemmesiden er lappet. Nogenlunde.", 2200);
     }, 4700);
   });
 }
 
 let seriousTimer;
+let seriousResetTimer;
+// The footer owns placement; this function owns actual visibility and ARIA.
+function updateSeriousMessageVisibility(atBottom) {
+  if (!seriousMessage) return;
+  const inFooter = !!seriousMessage.closest(".footer-message-slot");
+  const visible = inFooter
+    ? (atBottom ?? (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24))
+    : seriousMessage.classList.contains("show");
+  const footerVisible = inFooter && visible;
+  if (seriousMessage.classList.contains("footer-visible") !== footerVisible) seriousMessage.classList.toggle("footer-visible", footerVisible);
+  const ariaHidden = visible ? "false" : "true";
+  if (seriousMessage.getAttribute("aria-hidden") !== ariaHidden) seriousMessage.setAttribute("aria-hidden", ariaHidden);
+}
+function resetSeriousMessage() {
+  seriousMessage.querySelector("strong").textContent = "PROFESSIONEL TILSTAND";
+  seriousMessage.querySelector("span").textContent = "Ingen jokes. Ingen panik. Ingen dårlige beslutninger.";
+}
 if (seriousMode) {
   seriousMode.addEventListener("change", () => {
     clearTimeout(seriousTimer);
+    clearTimeout(seriousResetTimer);
+    resetSeriousMessage();
     if (seriousMode.checked) {
       document.body.classList.add("serious-mode");
       seriousMessage.classList.add("show");
-      seriousMessage.setAttribute("aria-hidden","false");
+      updateSeriousMessageVisibility();
       seriousTimer = setTimeout(() => {
         seriousMode.checked = false;
         document.body.classList.remove("serious-mode");
         seriousMessage.querySelector("strong").textContent = "DET HER HOLDER VI IKKE UD.";
         seriousMessage.querySelector("span").textContent = "Den fjollede hjemmeside er tilbage.";
-        setTimeout(() => {
+        updateSeriousMessageVisibility();
+        seriousResetTimer = setTimeout(() => {
           seriousMessage.classList.remove("show");
-          seriousMessage.setAttribute("aria-hidden","true");
-          seriousMessage.querySelector("strong").textContent = "PROFESSIONEL TILSTAND";
-          seriousMessage.querySelector("span").textContent = "Ingen jokes. Ingen panik. Ingen dårlige beslutninger.";
+          resetSeriousMessage();
+          updateSeriousMessageVisibility();
         }, 1800);
       }, 5000);
     } else {
       document.body.classList.remove("serious-mode");
       seriousMessage.classList.remove("show");
+      updateSeriousMessageVisibility();
     }
   });
 }
 
 let panicCount = 0;
 panicButtons.forEach(btn => {
+  const originalText = btn.textContent;
+  let resetTimer;
   btn.addEventListener("mouseenter", () => {
     panicCount++;
     if (panicCount % 10 === 0) {
+      clearTimeout(resetTimer);
       btn.textContent = "🥤 MANGLER PEPSI MAX";
-      setTimeout(() => btn.textContent = "🚨 PANIK!", 1800);
+      resetTimer = setTimeout(() => btn.textContent = originalText, 1800);
     }
   });
 });

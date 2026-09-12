@@ -4,6 +4,13 @@
   const KEY = "tjoerring-entreprenoer-home";
   const API = `https://counterapi.com/api/${NS}/${ACTION}/${KEY}`;
 
+  function safeGet(key) {
+    try { return localStorage.getItem(key); } catch { return null; }
+  }
+  function safeSet(key, value) {
+    try { localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
+  }
+
   const style = document.createElement("style");
   style.textContent = `
     .visitor-counter-section{background:#080808;color:#fff;padding:72px 0;border-top:1px solid #242424;border-bottom:1px solid #242424;overflow:hidden}
@@ -98,10 +105,44 @@
     }, 30000);
 
     const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
-    const getValue = async url => { const r = await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(`HTTP ${r.status}`); const d = await r.json(); return Number(d.value ?? d.count ?? 0); };
+    const getValue = async url => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      try {
+        const r = await fetch(url, {cache:"no-store", signal:controller.signal});
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const d = await r.json();
+        const raw = d?.value ?? d?.count;
+        if (typeof raw !== "number" && !(typeof raw === "string" && raw.trim())) throw new Error("Invalid counter value");
+        const value = Number(raw);
+        if (!Number.isFinite(value) || value < 0) throw new Error("Invalid counter value");
+        return value;
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
     const renderOdometer = value => { const el=document.getElementById("visitorOdometer"); const chars=String(Math.max(0,Math.floor(value))).padStart(6,"0").split(""); el.innerHTML=chars.map((c,i)=>`<span class="odometer-digit" style="animation-delay:${i*45}ms">${c}</span>`).join(""); };
-    let deviceVisits=Number(localStorage.getItem("tjoerring-device-visits")||0)+1; localStorage.setItem("tjoerring-device-visits",String(deviceVisits)); document.getElementById("visitorDevice").textContent=fmt(deviceVisits);
-    Promise.all([getValue(API),getValue(`${API}?readOnly=true&unique=true`),getValue(`${API}?readOnly=true&timeline=24h`)]).then(([total,unique,today])=>{document.getElementById("visitorTotal").textContent=fmt(total);document.getElementById("visitorUnique").textContent=fmt(unique);document.getElementById("visitorToday").textContent=fmt(today);renderOdometer(total);}).catch(()=>{document.getElementById("visitorTotal").textContent="OFFLINE";document.getElementById("visitorTotal").classList.add("counter-error");document.getElementById("visitorUnique").textContent="–";document.getElementById("visitorToday").textContent="–";document.getElementById("visitorOdometer").innerHTML='<span class="odometer-digit">O</span><span class="odometer-digit">F</span><span class="odometer-digit">F</span>';});
+    const storedVisits = Number(safeGet("tjoerring-device-visits") || 0);
+    const deviceVisits = (Number.isFinite(storedVisits) && storedVisits >= 0 ? storedVisits : 0) + 1;
+    safeSet("tjoerring-device-visits", String(deviceVisits));
+    document.getElementById("visitorDevice").textContent = fmt(deviceVisits);
+    [
+      ["visitorTotal", API],
+      ["visitorUnique", `${API}?readOnly=true&unique=true`],
+      ["visitorToday", `${API}?readOnly=true&timeline=24h`]
+    ].forEach(([id, url]) => {
+      const field = document.getElementById(id);
+      getValue(url).then(value => {
+        field.textContent = fmt(value);
+        if (id === "visitorTotal") renderOdometer(value);
+      }).catch(() => {
+        field.textContent = id === "visitorTotal" ? "OFFLINE" : "–";
+        if (id === "visitorTotal") {
+          field.classList.add("counter-error");
+          document.getElementById("visitorOdometer").innerHTML = '<span class="odometer-digit">O</span><span class="odometer-digit">F</span><span class="odometer-digit">F</span>';
+        }
+      });
+    });
   }
 
   /* Den hvide boks ligger nu i footerens højre felt og kommer først ind ved bunden. */
@@ -115,14 +156,11 @@
     slot.appendChild(seriousMessage);
 
     let updateScheduled = false;
-    let wasAtBottom;
     const updateFooterMessage = () => {
       updateScheduled = false;
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
-      if (atBottom === wasAtBottom) return;
-      wasAtBottom = atBottom;
-      seriousMessage.classList.toggle("footer-visible", atBottom);
-      seriousMessage.setAttribute("aria-hidden", atBottom ? "false" : "true");
+      // The shared controller skips unchanged writes, including after mode changes.
+      updateSeriousMessageVisibility(atBottom);
     };
     const scheduleFooterMessage = () => {
       if (updateScheduled) return;
