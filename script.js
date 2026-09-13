@@ -6,6 +6,25 @@ const distance = document.getElementById("distance");
 const recalculate = document.getElementById("recalculate");
 const logo = document.getElementById("logo");
 const toast = document.getElementById("toast");
+let toastTimer;
+let toastCopy = [];
+const translateCopy = text => window.TjoerringI18n?.text(text) || text;
+function renderToast() {
+  const text = toastCopy.map(translateCopy).join('\n');
+  if (toast.textContent !== text) toast.textContent = text;
+}
+function showToast(copy, duration = 2600) {
+  clearTimeout(toastTimer);
+  toastCopy = Array.isArray(copy) ? copy : [copy];
+  renderToast();
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+    toastCopy = ['Stop med at trykke på gravemaskinen.'];
+    renderToast();
+  }, duration);
+}
+document.addEventListener('tjoerring:languagechange',renderToast);
 
 function openModal() {
   panicModal.classList.add("show");
@@ -72,8 +91,7 @@ recalculate.addEventListener("click", () => {
 logo.addEventListener("click", (event) => {
   if (event.shiftKey) {
     event.preventDefault();
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2600);
+    showToast('Stop med at trykke på gravemaskinen.');
   }
 });
 
@@ -158,18 +176,17 @@ setTimeout(runDriveby, 35000);
 setInterval(runDriveby, 90000);
 
 let typed = "";
+let fullSendTimer;
 document.addEventListener("keydown", (event) => {
   if (event.key.length !== 1) return;
   typed = (typed + event.key.toLowerCase()).slice(-4);
   if (typed === "grav") {
     document.body.classList.add("full-send");
-    toast.textContent = "⚠️ ENTREPRENØR MODE AKTIVERET — FULD SEND 🚜";
-    toast.classList.add("show");
+    showToast("⚠️ ENTREPRENØR MODE AKTIVERET — FULD SEND 🚜", 3200);
     runDriveby();
-    setTimeout(() => {
+    clearTimeout(fullSendTimer);
+    fullSendTimer = setTimeout(() => {
       document.body.classList.remove("full-send");
-      toast.classList.remove("show");
-      toast.textContent = "Stop med at trykke på gravemaskinen.";
     }, 3200);
   }
 });
@@ -212,7 +229,7 @@ if (pepsiCans) {
   pepsiCans.setAttribute("title", "Klik for Pepsi Max Boost");
 
   pepsiCans.addEventListener("click", () => {
-    pepsiBoost++;
+    pepsiBoost = Math.min(pepsiBoost + 1, 10);
     const current = parseInt(pepsiPercent.textContent, 10) || 87;
     const value = Math.min(current + 11, 149);
 
@@ -221,15 +238,17 @@ if (pepsiCans) {
     void pepsiCans.offsetWidth;
     pepsiCans.classList.add("boosted");
 
-    if (value >= 105) {
-      boostStatus.textContent = "⚠️ OVERTRYK — ARBEJDSHASTIGHED +40%";
-      boostStatus.classList.add("overpressure");
+    if (pepsiBoost * 20 > 100) {
       entrepreneurValue.textContent = "127%";
       meterFill.style.width = "100%";
-    } else {
-      boostStatus.textContent = "PEPSI MAX TILFØRT";
-      boostStatus.classList.remove("overpressure");
     }
+    phase3.renderPepsi();
+    phase3.record('pepsi');
+  });
+  pepsiCans.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    pepsiCans.click();
   });
 }
 
@@ -243,12 +262,7 @@ if (dontClick) {
       holeOverlay.classList.remove("active");
       holeOverlay.setAttribute("aria-hidden","true");
       document.body.classList.remove("hole-chaos");
-      toast.textContent = "🔧 Hjemmesiden er lappet. Nogenlunde.";
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-        toast.textContent = "Stop med at trykke på gravemaskinen.";
-      }, 2200);
+      showToast("🔧 Hjemmesiden er lappet. Nogenlunde.", 2200);
     }, 4700);
   });
 }
@@ -347,6 +361,7 @@ document.body.appendChild(philosophyScript);
       if (Number.isFinite(field.valueAsNumber) && (field.valueAsNumber < 0 || field.valueAsNumber > limits[i])) field.value = String(values()[i]);
       feedback = '';
       render();
+      phase3.record('hole');
     });
     field.addEventListener('change',() => { field.value = String(values()[i]); render(); });
   });
@@ -356,6 +371,8 @@ document.body.appendChild(philosophyScript);
     fields.forEach((field,i) => { field.value = String(after[i]); });
     feedback = after.some((v,i) => v > before[i]) ? 'Sådan. Meget bedre.' : 'Nu er hullet stort nok. Selv for os.';
     render();
+    phase3.record('hole');
+    phase3.record('grow');
   });
   document.getElementById('resetHole').addEventListener('click',() => {
     fields.forEach((field,i) => { field.value = String(defaults[i]); });
@@ -365,6 +382,7 @@ document.body.appendChild(philosophyScript);
   document.getElementById('newExcuse').addEventListener('click',() => {
     excuseIndex = (excuseIndex + 1 + Math.floor(Math.random()*(excuses.length-1))) % excuses.length;
     render();
+    phase3.record('excuse');
   });
   document.addEventListener('tjoerring:languagechange',render);
   render();
@@ -436,6 +454,7 @@ document.body.appendChild(philosophyScript);
     if (quiz.currentQuestion >= questions.length || quiz.answers[quiz.currentQuestion] === null) return;
     quiz.currentQuestion++;
     quiz.score = quiz.answers.reduce((sum,value) => sum+(value ?? 0),0);
+    if (quiz.currentQuestion === questions.length && quiz.score/(questions.length*3) >= 0.8) phase3.record('quiz');
     renderQuiz();
     get(quiz.currentQuestion === questions.length ? 'quizLevel' : 'quizQuestion').focus({preventScroll:true});
   });
@@ -448,6 +467,7 @@ document.body.appendChild(philosophyScript);
     if (emergency.currentStep !== from) return;
     if (update) update();
     emergency.currentStep = to;renderEmergency();get('emergencyPrompt').focus({preventScroll:true});
+    if (to === 'sent') phase3.record('emergency');
   }
   get('emergencyStart').addEventListener('click',() => advanceEmergency('start','pepsi'));
   get('emergencyYes').addEventListener('click',() => advanceEmergency('pepsi','problem',() => { emergency.pepsi = true; }));
@@ -464,4 +484,101 @@ document.body.appendChild(philosophyScript);
   });
   document.addEventListener('tjoerring:languagechange',renderLanguage);
   renderLanguage();
+})();
+
+// Phase 3: bounded session state and stable nodes; no polling or observers.
+const phase3 = (() => {
+  const get = id => document.getElementById(id);
+  const t = translateCopy;
+  const set = (node, value) => { if (node.textContent !== value) node.textContent = value; };
+  const achievements = {
+    hole:{target:1,title:'HULSPECIALIST'}, grow:{target:3,title:'DET KAN ALTID BLIVE STØRRE'},
+    excuse:{target:3,title:'UNDSKYLDNINGSMESTER'}, quiz:{target:1,title:'FULD SEND'},
+    emergency:{target:1,title:'AKUT GODKENDT'}, pepsi:{target:5,title:'PEPSI MAX-ANSVARLIG'}
+  };
+  const counts = Object.fromEntries(Object.keys(achievements).map(key => [key,0]));
+  function renderAchievements() {
+    let total = 0;
+    Object.entries(achievements).forEach(([key, achievement]) => {
+      const unlocked = counts[key] >= achievement.target;
+      if (unlocked) total++;
+      const card = document.querySelector(`[data-achievement="${key}"]`);
+      if (card.classList.contains('unlocked') !== unlocked) card.classList.toggle('unlocked',unlocked);
+      set(card.querySelector('.achievement-status'),t(unlocked ? '✓ OPNÅET' : '🔒 LÅST'));
+    });
+    set(get('academyCount'),total+' / 6');
+  }
+  function record(key) {
+    const achievement = achievements[key];
+    if (!achievement || counts[key] >= achievement.target) return;
+    counts[key]++;
+    if (counts[key] === achievement.target) {
+      renderAchievements();
+      showToast(['🏆 ACHIEVEMENT UNLOCKED',achievement.title]);
+    }
+  }
+  const pepsiLevels = [
+    ['NORMAL DRIFT','Alt ser mistænkeligt professionelt ud.'],
+    ['ØGET ARBEJDSLYST','Produktiviteten er steget. Ingen ved hvorfor.'],
+    ['TVIVLSOMT HØJT TEMPO','Gravemaskinen virker pludselig større.'],
+    ['FULD SEND','Planlægningen er officielt blevet sprunget over.'],
+    ['⚠ OVERTRYK','Arbejdshastighed +40 %. Dømmekraft -63 %.'],
+    ['🚨 KRITISK ENTREPRENØRTILSTAND','STOP MED AT GIVE DEM PEPSI MAX.']
+  ];
+  function renderPepsi() {
+    const level = pepsiBoost * 20;
+    const tier = level <= 25 ? 0 : level <= 50 ? 1 : level <= 75 ? 2 : level <= 100 ? 3 : level <= 150 ? 4 : 5;
+    set(get('boostLevel'),level+' %');
+    set(boostStatus,t(pepsiLevels[tier][0]));
+    set(get('boostMessage'),t(pepsiLevels[tier][1]));
+    if (boostStatus.classList.contains('overpressure') !== (level > 100)) boostStatus.classList.toggle('overpressure',level > 100);
+    if (boostStatus.classList.contains('critical') !== (level > 150)) boostStatus.classList.toggle('critical',level > 150);
+    const title = t('Klik for Pepsi Max Boost');
+    if (pepsiCans.getAttribute('title') !== title) pepsiCans.setAttribute('title',title);
+  }
+  const selectIds = ['offerWork','offerUrgency','offerPepsi'];
+  let offer = null;
+  function calculateOffer(variation = 0) {
+    const [work, urgency, supply] = selectIds.map(id => Math.min(3,Math.max(0,Number(get(id).value) || 0)));
+    const surcharge = [3000,1500,0,0][supply];
+    const price = [4847,12847,9847,19847][work] + [0,2400,7900,11000][urgency] + surcharge - supply*200 + variation;
+    offer = {price,uncertainty:Math.round(price*(0.45+work*0.1+urgency*0.05)/100)*100,surcharge,urgency,work,supply};
+    renderOffer();
+  }
+  function renderOffer() {
+    if (!offer) return;
+    if (get('offerResult').hidden) get('offerResult').hidden = false;
+    const money = value => new Intl.NumberFormat(window.TjoerringI18n?.getLanguage() || 'da',{style:'currency',currency:'DKK',maximumFractionDigits:0}).format(value);
+    set(get('offerPrice'),money(offer.price));
+    set(get('offerUncertainty'),'± '+money(offer.uncertainty));
+    set(get('offerTime'),t(offer.urgency >= 2 ? 'Vi skulle helst have været færdige i går.' : 'Et sted mellem 45 minutter og torsdag.'));
+    set(get('offerRisk'),t(offer.work+offer.urgency >= 4 ? 'Højt. Naboen er allerede nervøs.' : 'Moderat, men stigende.'));
+    set(get('offerSurcharge'),money(offer.surcharge)+' – '+t(offer.supply >= 2 ? 'kunden har styr på prioriteterne.' : 'strategisk forsyning mangler.'));
+  }
+  get('offerForm').addEventListener('submit', event => { event.preventDefault();calculateOffer(); });
+  selectIds.forEach(id => get(id).addEventListener('change',() => { if (offer) calculateOffer(); }));
+  get('worseOffer').addEventListener('click',() => calculateOffer(100 + Math.floor(Math.random()*10)*100));
+  const proofCopy = [
+    ['Pæn græsplæne','Potentiale'],['Lille bunke jord','Geografisk landemærke'],['Kunden: Bare lige lidt','Projektet har udviklet sig']
+  ];
+  const after = [false,false,false];
+  function renderProof(index) {
+    const card = document.querySelector(`[data-proof="${index}"]`);
+    const button = card.querySelector('button');
+    if (card.classList.contains('is-after') !== after[index]) card.classList.toggle('is-after',after[index]);
+    const pressed = String(after[index]);
+    if (button.getAttribute('aria-pressed') !== pressed) button.setAttribute('aria-pressed',pressed);
+    set(get('proofCaption'+index),t(after[index] ? 'EFTER' : 'FØR')+': '+t(proofCopy[index][after[index] ? 1 : 0]));
+    set(button,t(after[index] ? 'VIS FØR' : 'VIS EFTER'));
+  }
+  document.querySelectorAll('[data-proof-toggle]').forEach(button => button.addEventListener('click',() => {
+    const index = Number(button.dataset.proofToggle);after[index] = !after[index];renderProof(index);
+  }));
+  function renderLanguage() {
+    document.querySelectorAll('[data-phase3-copy]').forEach(node => set(node,t(node.dataset.phase3Copy)));
+    renderAchievements();renderOffer();renderPepsi();after.forEach((_,i) => renderProof(i));
+  }
+  document.addEventListener('tjoerring:languagechange',renderLanguage);
+  renderLanguage();
+  return {record,renderPepsi};
 })();

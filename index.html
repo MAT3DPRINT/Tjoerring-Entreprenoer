@@ -107,7 +107,7 @@
             <div class="status-row">
               <span>Pepsi Max</span>
               <strong id="coffeeStatus" class="pepsi-status">
-                <span class="pepsi-cans" aria-label="4 Pepsi Max dåser">
+                <span class="pepsi-cans" role="button" tabindex="0" aria-label="Pepsi Max boost" aria-controls="boostStatus boostLevel boostMessage">
                   <i aria-hidden="true"><em></em><b>PEPSI</b><small>MAX</small></i>
                   <i aria-hidden="true"><em></em><b>PEPSI</b><small>MAX</small></i>
                   <i aria-hidden="true"><em></em><b>PEPSI</b><small>MAX</small></i>
@@ -153,7 +153,12 @@
             </span>
             <h3>Produktivitetskontrol</h3>
             <p>Pepsi Max = mere entreprenør.</p>
-            <div class="boost-status" id="boostStatus">NORMAL DRIFT</div>
+            <div class="pepsi-upgrade" data-tool-dynamic aria-live="polite" aria-atomic="true">
+              <p class="boost-level"><strong id="boostLevel">0 %</strong> <span data-phase3-copy="BOOST-NIVEAU">BOOST-NIVEAU</span></p>
+              <div class="boost-status" id="boostStatus">NORMAL DRIFT</div>
+              <p id="boostMessage">Alt ser mistænkeligt professionelt ud.</p>
+              <p class="interactive-note" data-phase3-copy="Tryk på dåserne i Live Status. +20 % pr. klik. Maks. 200 %.">Tryk på dåserne i Live Status. +20 % pr. klik. Maks. 200 %.</p>
+            </div>
           </div>
 
           <div class="chaos-card meter-card">
@@ -264,6 +269,49 @@
             <button type="button" id="emergencyReset" class="tool-reset emergency-reset" hidden><span data-interactive-copy="Start forfra">Start forfra</span></button>
           </div>
         </article>
+      </div>
+    </section>
+
+    <section class="phase3-area" id="contractorAcademy" aria-labelledby="academyHeading" data-tool-dynamic>
+      <div class="container">
+        <div class="academy-heading"><div><h2 id="academyHeading" data-phase3-copy="ENTREPRENØR-AKADEMIET">ENTREPRENØR-AKADEMIET</h2><p class="interactive-note" data-phase3-copy="Officielt uofficielle kvalifikationer.">Officielt uofficielle kvalifikationer.</p></div><p id="academyCount" aria-live="polite">0 / 6</p></div>
+        <ul class="achievement-grid">
+          <li data-achievement="hole"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="HULSPECIALIST">HULSPECIALIST</h3><p data-phase3-copy="Du har beregnet dit første hul.">Du har beregnet dit første hul.</p></li>
+          <li data-achievement="grow"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="DET KAN ALTID BLIVE STØRRE">DET KAN ALTID BLIVE STØRRE</h3><p data-phase3-copy="Fornuft blev fravalgt til fordel for kubikmeter.">Fornuft blev fravalgt til fordel for kubikmeter.</p></li>
+          <li data-achievement="excuse"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="UNDSKYLDNINGSMESTER">UNDSKYLDNINGSMESTER</h3><p data-phase3-copy="Du er nu kvalificeret til mandagsmødet.">Du er nu kvalificeret til mandagsmødet.</p></li>
+          <li data-achievement="quiz"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="FULD SEND">FULD SEND</h3><p data-phase3-copy="Planlægning er nu officielt valgfrit.">Planlægning er nu officielt valgfrit.</p></li>
+          <li data-achievement="emergency"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="AKUT GODKENDT">AKUT GODKENDT</h3><p data-phase3-copy="Gravemaskinen er følelsesmæssigt på vej.">Gravemaskinen er følelsesmæssigt på vej.</p></li>
+          <li data-achievement="pepsi"><span class="achievement-status">🔒 LÅST</span><h3 data-phase3-copy="PEPSI MAX-ANSVARLIG">PEPSI MAX-ANSVARLIG</h3><p data-phase3-copy="Hydrering? Nej. Arbejdsstrategi.">Hydrering? Nej. Arbejdsstrategi.</p></li>
+        </ul>
+        <p class="interactive-note" data-phase3-copy="Brug hulberegneren · større hul ×3 · ny undskyldning ×3 · quiz mindst 80 % · gennemfør akut-hjælp · Pepsi ×5. Nulstilles ved genindlæsning.">Brug hulberegneren · større hul ×3 · ny undskyldning ×3 · quiz mindst 80 % · gennemfør akut-hjælp · Pepsi ×5. Nulstilles ved genindlæsning.</p>
+        <div class="phase3-pair">
+          <article class="interactive-card" aria-labelledby="offerHeading">
+            <p class="section-tag" data-phase3-copy="REGNEAFDELINGEN GÆTTER">REGNEAFDELINGEN GÆTTER</p>
+            <h2 id="offerHeading" data-phase3-copy="FÅ ET HELT UFORPLIGTENDE CIRKA-TILBUD">FÅ ET HELT UFORPLIGTENDE CIRKA-TILBUD</h2>
+            <p class="interactive-note" data-phase3-copy="Prisen er vejledende. Meget vejledende.">Prisen er vejledende. Meget vejledende.</p>
+            <form id="offerForm" class="offer-form">
+              <label for="offerWork"><span data-phase3-copy="HVAD SKAL DER LAVES?">HVAD SKAL DER LAVES?</span><select id="offerWork"><option value="0" data-phase3-copy="Et hul">Et hul</option><option value="1" data-phase3-copy="Et stort hul">Et stort hul</option><option value="2" data-phase3-copy="Noget med jord">Noget med jord</option><option value="3" data-phase3-copy="Noget kunden ikke helt kan forklare">Noget kunden ikke helt kan forklare</option></select></label>
+              <label for="offerUrgency"><span data-phase3-copy="HVOR HASTER DET?">HVOR HASTER DET?</span><select id="offerUrgency"><option value="0" data-phase3-copy="Ikke så meget">Ikke så meget</option><option value="1" data-phase3-copy="I denne uge">I denne uge</option><option value="2" data-phase3-copy="I går">I går</option><option value="3" data-phase3-copy="Kunden står allerede og kigger">Kunden står allerede og kigger</option></select></label>
+              <label for="offerPepsi"><span data-phase3-copy="HVOR MEGET PEPSI MAX ER TILGÆNGELIGT?">HVOR MEGET PEPSI MAX ER TILGÆNGELIGT?</span><select id="offerPepsi"><option value="0" data-phase3-copy="Ingen">Ingen</option><option value="1" data-phase3-copy="1 dåse">1 dåse</option><option value="2" data-phase3-copy="En kasse">En kasse</option><option value="3" data-phase3-copy="Professionelle mængder">Professionelle mængder</option></select></label>
+              <button class="btn btn-yellow" type="submit" data-phase3-copy="BEREGN CIRKA-PRIS">BEREGN CIRKA-PRIS</button>
+            </form>
+            <div id="offerResult" class="offer-result" aria-live="polite" aria-atomic="true" hidden>
+              <dl><div><dt data-phase3-copy="ESTIMERET PRIS">ESTIMERET PRIS</dt><dd id="offerPrice"></dd></div><div><dt data-phase3-copy="Usikkerhed">Usikkerhed</dt><dd id="offerUncertainty"></dd></div><div><dt data-phase3-copy="Forventet arbejdstid">Forventet arbejdstid</dt><dd id="offerTime"></dd></div><div><dt data-phase3-copy="Risikoniveau">Risikoniveau</dt><dd id="offerRisk"></dd></div><div><dt data-phase3-copy="Pepsi Max-tillæg">Pepsi Max-tillæg</dt><dd id="offerSurcharge"></dd></div></dl>
+              <button class="tool-reset" type="button" id="worseOffer" data-phase3-copy="PRØV EN DÅRLIGERE BEREGNING">PRØV EN DÅRLIGERE BEREGNING</button>
+            </div>
+            <p class="interactive-note" data-phase3-copy="Dette er selvfølgelig ikke et rigtigt tilbud.">Dette er selvfølgelig ikke et rigtigt tilbud.</p>
+          </article>
+          <article class="interactive-card" aria-labelledby="documentationHeading">
+            <p class="section-tag" data-phase3-copy="BEVISMATERIALE">BEVISMATERIALE</p>
+            <h2 id="documentationHeading" data-phase3-copy="DOKUMENTATION">DOKUMENTATION</h2>
+            <p class="interactive-note" data-phase3-copy="Fordi billeder før arbejdet gør forklaringen bagefter meget lettere.">Fordi billeder før arbejdet gør forklaringen bagefter meget lettere.</p>
+            <div class="documentation-grid">
+              <figure class="project-proof" data-proof="0"><div class="proof-scene lawn" aria-hidden="true"><span class="proof-before">🌱 🌱 🌱</span><span class="proof-after">🕳️</span></div><figcaption id="proofCaption0" aria-live="polite"></figcaption><button type="button" class="tool-reset" aria-pressed="false" aria-controls="proofCaption0" data-proof-toggle="0">VIS EFTER</button></figure>
+              <figure class="project-proof" data-proof="1"><div class="proof-scene soil" aria-hidden="true"><span class="proof-before">⛰️</span><span class="proof-after">🏔️ 🏔️</span></div><figcaption id="proofCaption1" aria-live="polite"></figcaption><button type="button" class="tool-reset" aria-pressed="false" aria-controls="proofCaption1" data-proof-toggle="1">VIS EFTER</button></figure>
+              <figure class="project-proof" data-proof="2"><div class="proof-scene project" aria-hidden="true"><span class="proof-before">🌿 🏡</span><span class="proof-after">🚧 🚜 🚧</span></div><figcaption id="proofCaption2" aria-live="polite"></figcaption><button type="button" class="tool-reset" aria-pressed="false" aria-controls="proofCaption2" data-proof-toggle="2">VIS EFTER</button></figure>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -431,7 +479,7 @@
     </div>
   </div>
 
-  <div class="toast" id="toast">Stop med at trykke på gravemaskinen.</div>
+  <div class="toast" id="toast" data-tool-dynamic role="status" aria-live="polite">Stop med at trykke på gravemaskinen.</div>
 
   <div class="panic-sequence" id="panicSequence" aria-hidden="true">
     <div class="panic-banner" id="panicBanner">🚨 TJØRRING ENTREPRENØR ER PÅ VEJ! 🚨</div>
