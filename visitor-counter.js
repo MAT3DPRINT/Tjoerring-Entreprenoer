@@ -105,18 +105,28 @@
     }, 30000);
 
     const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
+    const counterError = (kind, message) => Object.assign(new Error(message), {kind});
     const getValue = async url => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
       try {
         const r = await fetch(url, {cache:"no-store", signal:controller.signal});
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const d = await r.json();
+        if (!r.ok) throw counterError("http", `HTTP ${r.status}`);
+        let d;
+        try { d = await r.json(); }
+        catch (error) {
+          if (controller.signal.aborted) throw error;
+          throw counterError("invalid-response", "Invalid counter JSON");
+        }
         const raw = d?.value ?? d?.count;
-        if (typeof raw !== "number" && !(typeof raw === "string" && raw.trim())) throw new Error("Invalid counter value");
+        if (typeof raw !== "number" && !(typeof raw === "string" && raw.trim())) throw counterError("invalid-response", "Missing or invalid counter value");
         const value = Number(raw);
-        if (!Number.isFinite(value) || value < 0) throw new Error("Invalid counter value");
+        if (!Number.isSafeInteger(value) || value < 0) throw counterError("invalid-response", "Invalid counter value");
         return value;
+      } catch (error) {
+        if (controller.signal.aborted) throw counterError("timeout", "Counter request exceeded 5000 ms");
+        if (error.kind) throw error;
+        throw counterError("network", "Counter network or CORS failure");
       } finally {
         clearTimeout(timeout);
       }
@@ -126,22 +136,73 @@
     const deviceVisits = (Number.isFinite(storedVisits) && storedVisits >= 0 ? storedVisits : 0) + 1;
     safeSet("tjoerring-device-visits", String(deviceVisits));
     document.getElementById("visitorDevice").textContent = fmt(deviceVisits);
+    const statusMessages = {
+      da: {stale:"Ikke opdateret. Sidst hentet:", unavailable:"Besøgstal er midlertidigt utilgængelige."},
+      en: {stale:"Not up to date. Last retrieved:", unavailable:"Visitor counts are temporarily unavailable."},
+      de: {stale:"Nicht aktuell. Zuletzt abgerufen:", unavailable:"Besucherzahlen sind vorübergehend nicht verfügbar."},
+      pl: {stale:"Dane nieaktualne. Ostatnio pobrano:", unavailable:"Statystyki odwiedzin są chwilowo niedostępne."}
+    };
+    const statuses = [];
+    const updateStatus = state => {
+      if (state.node.hidden) return;
+      const lang = document.documentElement.lang.split("-")[0];
+      const messages = statusMessages[lang] || statusMessages.da;
+      state.node.textContent = state.updatedAt
+        ? `${messages.stale} ${new Date(state.updatedAt).toLocaleString(statusMessages[lang] ? lang : "da")}`
+        : messages.unavailable;
+    };
+    // Observe language changes only, never the counter's own text mutations.
+    new MutationObserver(() => statuses.forEach(updateStatus)).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
     [
       ["visitorTotal", API],
       ["visitorUnique", `${API}?readOnly=true&unique=true`],
       ["visitorToday", `${API}?readOnly=true&timeline=24h`]
-    ].forEach(([id, url]) => {
+    ].forEach(async ([id, url]) => {
       const field = document.getElementById(id);
-      getValue(url).then(value => {
+      const cacheKey = `tjoerring-counter-v1:${NS}:${ACTION}:${KEY}:${id}`;
+      let cached = null;
+      try {
+        const entry = JSON.parse(safeGet(cacheKey));
+        if (entry && Number.isSafeInteger(entry.value) && entry.value >= 0 &&
+            Number.isSafeInteger(entry.updatedAt) && entry.updatedAt > 0 && entry.updatedAt <= Date.now()) cached = entry;
+      } catch { /* Ignore malformed cache data; never invent a count. */ }
+      const status = document.createElement("small");
+      status.id = `${id}Status`;
+      status.setAttribute("role", "status");
+      status.hidden = true;
+      field.parentElement.appendChild(status);
+      const state = {node:status, updatedAt:cached?.updatedAt};
+      statuses.push(state);
+      field.setAttribute("aria-describedby", status.id);
+      if (id === "visitorTotal") document.getElementById("visitorOdometer").setAttribute("aria-describedby", status.id);
+      const render = value => {
         field.textContent = fmt(value);
         if (id === "visitorTotal") renderOdometer(value);
-      }).catch(() => {
-        field.textContent = id === "visitorTotal" ? "OFFLINE" : "–";
-        if (id === "visitorTotal") {
-          field.classList.add("counter-error");
-          document.getElementById("visitorOdometer").innerHTML = '<span class="odometer-digit">O</span><span class="odometer-digit">F</span><span class="odometer-digit">F</span>';
+      };
+      const readUrl = new URL(url);
+      readUrl.searchParams.set("readOnly", "true");
+      const retryDelays = [2000, 5000];
+      for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
+        try {
+          // Only the original request may record a visit. A timed-out write may
+          // already have reached CounterAPI, so every retry MUST be read-only.
+          const value = await getValue(attempt === 0 ? url : readUrl.href);
+          safeSet(cacheKey, JSON.stringify({value, updatedAt:Date.now()}));
+          render(value);
+          status.hidden = true;
+          status.textContent = "";
+          return;
+        } catch (error) {
+          console.warn("[Visitor counter]", {field:id, attempt:attempt + 1, kind:error.kind, message:error.message});
+          if (attempt === 0) {
+            if (cached) render(cached.value);
+            else field.textContent = "–";
+            status.hidden = false;
+            updateStatus(state);
+          }
+          if (attempt < retryDelays.length) await new Promise(resolve => setTimeout(resolve, retryDelays[attempt]));
         }
-      });
+      }
     });
   }
 
