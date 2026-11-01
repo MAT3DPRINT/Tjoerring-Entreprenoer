@@ -2,10 +2,31 @@
   "name": "tjoerring-counter",
   "main": "production.mjs",
   "compatibility_date": "2026-10-28",
-  "workers_dev": false,
+  "workers_dev": true,
   "preview_urls": false,
-  "durable_objects": {"bindings": [{"name":"SECURE_COUNTER","class_name":"ReadyCounter"}]},
-  "migrations": [{"tag":"production-v1","new_sqlite_classes":["ReadyCounter"]}],
-  "vars": {"ALLOWED_ORIGIN":"https://aahnej.dk","TURNSTILE_HOSTNAME":"aahnej.dk","TURNSTILE_SITEKEY":""},
-  "observability": {"enabled":false}
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SECURE_COUNTER",
+        "class_name": "ReadyCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "production-v1",
+      "new_sqlite_classes": [
+        "ReadyCounter"
+      ]
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGIN": "https://aahnej.dk",
+    "TURNSTILE_HOSTNAME": "aahnej.dk",
+    "TURNSTILE_SITEKEY": "0x4AAAAAAFvv3ABm-ma0Y6xP"
+  },
+  "observability": {
+    "enabled": false
+  },
+  "account_id": "09ded9ba01855e340be0872b9bed84f9"
 }

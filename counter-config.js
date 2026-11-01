@@ -1,2 +1,2 @@
-// Explicit provider switch. Configure a NEW production Worker before activation.
-window.TjoerringCounterConfig = Object.freeze({provider:'counterapi', apiBase:''});
+// Production provider. Set provider to 'counterapi' for an explicit rollback.
+window.TjoerringCounterConfig = Object.freeze({provider:'cloudflare', apiBase:'https://tjoerring-counter.mateusz-szulczik.workers.dev'});
