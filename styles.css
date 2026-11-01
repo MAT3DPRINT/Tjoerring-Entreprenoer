@@ -705,3 +705,6 @@ body.serious-mode{filter:grayscale(1)}
 /* Pepsi Max Boost: én statisk dåse */
 .pepsi-cans-static{cursor:default!important;pointer-events:none}
 .pepsi-cans-static:active{transform:none!important}
+
+/* Likes follow the existing counter's black/yellow palette. */
+.counter-likes{margin-top:24px;color:#bbb}.counter-likes p{max-width:650px;line-height:1.5}.counter-like-button{background:#f6c400;color:#111;border:2px solid #f6c400;border-radius:10px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer}.counter-like-button:disabled{opacity:.65;cursor:wait}.counter-like-button:focus-visible{outline:3px solid white;outline-offset:3px}

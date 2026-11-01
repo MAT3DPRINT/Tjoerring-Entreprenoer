@@ -163,6 +163,7 @@
     ['BESØGSMÅLER','VISITOR METER','BESUCHSZÄHLER','LICZNIK ODWIEDZIN'],
     ['Siden vi begyndte at grave på internettet','Since we started digging on the internet','Seit wir im Internet zu graben begannen','Odkąd zaczęliśmy kopać w internecie'],
     ['Sidevisninger','Page views','Seitenaufrufe','Odsłony'],
+    ['Unikke browsere · 30 dage','Unique browsers · 30 days','Eindeutige Browser · 30 Tage','Unikalne przeglądarki · 30 dni'],
     ['Unikke besøgende','Unique visitors','Eindeutige Besucher','Unikalni odwiedzający'],
     ['Seneste 24 timer','Last 24 hours','Letzte 24 Stunden','Ostatnie 24 godziny'],
     ['Besøg på denne enhed','Visits on this device','Besuche auf diesem Gerät','Wizyty na tym urządzeniu'],
@@ -214,7 +215,7 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const p = node.parentElement;
-        if (!p || ['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName) || p.closest('.language-menu')) return NodeFilter.FILTER_REJECT;
+        if (!p || ['SCRIPT','STYLE','NOSCRIPT'].includes(p.tagName) || p.closest('.language-menu, [data-counter-owned]')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });

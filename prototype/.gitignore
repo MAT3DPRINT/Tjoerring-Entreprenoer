@@ -1,0 +1,9 @@
+local-test.sqlite*
+ready-local-test.sqlite*
+.dev.vars*
+.env*
+.wrangler/
+node_modules/
+*.counter-backup.json
+
+likes-local-test.sqlite*

@@ -1,14 +1,15 @@
 (() => {
+  const cloudflare = window.TjoerringCounterConfig?.provider === 'cloudflare';
   const NS = "mat3dprint.github.io";
   const ACTION = "view";
   const KEY = "tjoerring-entreprenoer-home";
   const API = `https://counterapi.com/api/${NS}/${ACTION}/${KEY}`;
 
   function safeGet(key) {
-    try { return localStorage.getItem(key); } catch { return null; }
+    try { if(cloudflare&&!window.TjoerringCounterConsent?.())return null;return localStorage.getItem(key); } catch { return null; }
   }
   function safeSet(key, value) {
-    try { localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
+    try { if(cloudflare&&!window.TjoerringCounterConsent?.())return;localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
   }
 
   const style = document.createElement("style");
@@ -88,6 +89,7 @@
         </div>
       </div>`;
     footer.insertAdjacentElement("beforebegin", section);
+    window.dispatchEvent(new Event("tjoerring:counter-mounted"));
 
     const introText = document.getElementById("visitorIntroText");
     const introMessages = [
@@ -107,6 +109,10 @@
     const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
     const counterError = (kind, message) => Object.assign(new Error(message), {kind});
     const getValue = async url => {
+      if (cloudflare) {
+        if (!window.TjoerringCloudflarePrototype) throw new Error("Cloudflare configuration unavailable");
+        return window.TjoerringCloudflarePrototype.getValue(url);
+      }
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
       try {
@@ -132,10 +138,15 @@
       }
     };
     const renderOdometer = value => { const el=document.getElementById("visitorOdometer"); const chars=String(Math.max(0,Math.floor(value))).padStart(6,"0").split(""); el.innerHTML=chars.map((c,i)=>`<span class="odometer-digit" style="animation-delay:${i*45}ms">${c}</span>`).join(""); };
+    let deviceCounted=false;
+    const countDevice=()=>{
+    if(cloudflare&&!window.TjoerringCounterConsent?.()){document.getElementById('visitorDevice').textContent='–';return;}
+    if(deviceCounted)return;deviceCounted=true;
     const storedVisits = Number(safeGet("tjoerring-device-visits") || 0);
     const deviceVisits = (Number.isFinite(storedVisits) && storedVisits >= 0 ? storedVisits : 0) + 1;
     safeSet("tjoerring-device-visits", String(deviceVisits));
     document.getElementById("visitorDevice").textContent = fmt(deviceVisits);
+    };countDevice();if(cloudflare)window.addEventListener('tjoerring:analytics-consent',countDevice);
     const statusMessages = {
       da: {stale:"Ikke opdateret. Sidst hentet:", unavailable:"Besøgstal er midlertidigt utilgængelige."},
       en: {stale:"Not up to date. Last retrieved:", unavailable:"Visitor counts are temporarily unavailable."},
@@ -153,13 +164,19 @@
     };
     // Observe language changes only, never the counter's own text mutations.
     new MutationObserver(() => statuses.forEach(updateStatus)).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
+    if (cloudflare) {
+      const label=document.getElementById('visitorUnique').nextElementSibling;label.dataset.counterOwned='true';
+      const labels={da:'Unikke browsere · 30 dage',en:'Unique browsers · 30 days',de:'Eindeutige Browser · 30 Tage',pl:'Unikalne przeglądarki · 30 dni'};
+      const update=()=>{label.textContent=labels[document.documentElement.lang]||labels.da;};update();
+      new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+    }
     [
       ["visitorTotal", API],
       ["visitorUnique", `${API}?readOnly=true&unique=true`],
       ["visitorToday", `${API}?readOnly=true&timeline=24h`]
     ].forEach(async ([id, url]) => {
       const field = document.getElementById(id);
-      const cacheKey = `tjoerring-counter-v1:${NS}:${ACTION}:${KEY}:${id}`;
+      const cacheKey = `${cloudflare ? "tjoerring-cloudflare-v1" : "tjoerring-counter-v1"}:${NS}:${ACTION}:${KEY}:${id}`;
       let cached = null;
       try {
         const entry = JSON.parse(safeGet(cacheKey));
@@ -181,6 +198,10 @@
       };
       const readUrl = new URL(url);
       readUrl.searchParams.set("readOnly", "true");
+      if (cloudflare) window.addEventListener('tjoerring:counter-refresh', async () => {
+        try { const value = await getValue(readUrl.href); state.updatedAt=Date.now();safeSet(cacheKey,JSON.stringify({value,updatedAt:state.updatedAt}));render(value);status.hidden=true;status.textContent=''; }
+        catch { status.hidden=false;updateStatus(state); }
+      }, {once:true});
       const retryDelays = [2000, 5000];
       for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
         try {

@@ -1,0 +1,50 @@
+{
+  "name": "tjoerring-counter-staging",
+  "account_id": "09ded9ba01855e340be0872b9bed84f9",
+  "main": "staging.mjs",
+  "compatibility_date": "2026-10-28",
+  "workers_dev": true,
+  "preview_urls": false,
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "STAGING_COUNTER",
+        "class_name": "StagingCounter"
+      },
+      {
+        "name": "SECURE_COUNTER",
+        "class_name": "ReadyCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "staging-v1",
+      "new_sqlite_classes": [
+        "StagingCounter"
+      ]
+    },
+    {
+      "tag": "staging-v2",
+      "new_sqlite_classes": [
+        "ReadyCounter"
+      ]
+    }
+  ],
+  "vars": {
+    "TURNSTILE_HOSTNAME": "tjoerring-counter-staging.mateusz-szulczik.workers.dev",
+    "TURNSTILE_SITEKEY": "0x4AAAAAAFqB3r2E2Hp7u7Cp"
+  },
+  "observability": {
+    "enabled": false
+  },
+  "rules": [
+    {
+      "type": "Text",
+      "globs": [
+        "**/likes-client.js"
+      ],
+      "fallthrough": true
+    }
+  ]
+}
