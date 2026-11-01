@@ -51,6 +51,14 @@ export class ReadyCounter {
    }
    if(!this.rows('SELECT ready FROM meta WHERE id=1')[0].ready)return response({error:'Restore incomplete'},503);
    if(this.rows('SELECT id FROM events WHERE id=?',data.event)[0])return response({recorded:false},200);
+   if(data.anonymous){
+    this.sql.exec('INSERT INTO events VALUES (?,?)',data.event,now);
+    this.sql.exec('INSERT INTO buckets VALUES (?,1) ON CONFLICT(minute) DO UPDATE SET n=n+1',Math.floor(now/MINUTE)*MINUTE);
+    this.sql.exec('UPDATE meta SET total=total+1 WHERE id=1');
+    this.sql.exec('DELETE FROM events WHERE at < ?',now-2*DAY);
+    this.sql.exec('DELETE FROM buckets WHERE minute < ?',Math.floor((now-2*DAY)/MINUTE)*MINUTE);
+    return response({recorded:true},202);
+   }
    this.pruneBrowsers(now);
    const min=Math.floor(now/MINUTE)*MINUTE,browser=this.rows('SELECT * FROM browsers WHERE id=?',data.browser)[0];
    if(browser?.minute===min&&browser.hits>=6)return response({error:'Browser rate limit'},429);
@@ -141,4 +149,13 @@ export async function collect(request,env,stub,verifyFetch=fetch){
  const hmac=async value=>Array.from(new Uint8Array(await crypto.subtle.sign('HMAC',key,encode.encode(value))),x=>x.toString(16).padStart(2,'0')).join('');
  const event=await hmac('event:'+data.eventId.toLowerCase()),browser=await hmac('browser:'+data.browserId.toLowerCase());
  return stub.fetch(new Request('https://internal/record',{method:'POST',body:JSON.stringify({event,browser,...(typeof data.like==='boolean'?{like:data.like}:{})})}));
+}
+
+// Page-document nonce only: no browser ID, IP, fingerprint, cookie or Turnstile.
+export async function anonymousView(request,stub){
+ let d;try{d=await boundedJSON(request,512);}catch{return response({error:'Invalid request'},400);}
+ if(!d||Object.keys(d).length!==1||typeof d.eventId!=='string'||!/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(d.eventId))return response({error:'Invalid event'},400);
+ const gate=await stub.fetch(new Request('https://internal/admit',{method:'POST'}));if(!(await gate.json()).allowed)return response({error:'Admission rate limit'},429);
+ const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('anonymous:'+d.eventId.toLowerCase()));const event=Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
+ return stub.fetch(new Request('https://internal/record',{method:'POST',body:JSON.stringify({anonymous:true,event})}));
 }

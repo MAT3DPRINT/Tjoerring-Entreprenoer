@@ -1,4 +1,4 @@
-import {response,boundedJSON,collect} from './ready-counter.mjs';
+import {response,boundedJSON,collect,anonymousView} from './ready-counter.mjs';
 export async function readyRoutes(request,env){
  const u=new URL(request.url),p=u.pathname;
  const stagingOrigin=env.ALLOWED_ORIGIN||'https://tjoerring-counter-staging.mateusz-szulczik.workers.dev';
@@ -24,6 +24,7 @@ export async function readyRoutes(request,env){
   }
   if(!allowed)return response({error:'Origin not allowed'},403);
   const stub=env.SECURE_COUNTER.get(env.SECURE_COUNTER.idFromName('public-v2'));
+  if(p==='/v2/pageview'&&request.method==='POST')return finish(await anonymousView(request,stub));
   if(p==='/v2/likes'){
    const likes=env.SECURE_COUNTER.get(env.SECURE_COUNTER.idFromName('likes-v1'));
    if(request.method==='GET')return finish(await likes.fetch(new Request('https://internal/likes')));

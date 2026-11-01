@@ -708,3 +708,15 @@ body.serious-mode{filter:grayscale(1)}
 
 /* Likes follow the existing counter's black/yellow palette. */
 .counter-likes{margin-top:24px;color:#bbb}.counter-likes p{max-width:650px;line-height:1.5}.counter-like-button{background:#f6c400;color:#111;border:2px solid #f6c400;border-radius:10px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer}.counter-like-button:disabled{opacity:.65;cursor:wait}.counter-like-button:focus-visible{outline:3px solid white;outline-offset:3px}
+
+/* A small, quiet like control. Existing full-screen effects stay above it. */
+.cf-anonymous .visitor-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.floating-like{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:90;color:#fff;font-size:15px}
+.like-launcher{width:48px;height:48px;border:2px solid #f6c400;border-radius:50%;background:#111;color:#f6c400;font-size:21px;cursor:pointer}
+.like-panel{position:absolute;right:0;bottom:60px;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 110px);overflow:auto;background:#111;border:2px solid #f6c400;border-radius:14px;padding:22px;box-shadow:0 8px 24px #0006;animation:likeOpen .18s ease-out}
+.like-panel[hidden]{display:none}.like-panel p{margin:8px 0 16px;line-height:1.5}.like-panel small{display:block;color:#bbb;margin-top:12px}.like-close{float:right;background:transparent;color:#f6c400;border:0;font-size:26px;min-width:44px;min-height:44px;cursor:pointer}.like-excavator{display:none;font-size:32px}.liked .like-excavator{display:block;animation:likeDig .7s ease-in-out 2}.like-launcher:focus-visible,.like-close:focus-visible{outline:3px solid white;outline-offset:3px}
+@keyframes likeOpen{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes likeDig{50%{transform:translateX(18px) rotate(-8deg)}}
+@media(prefers-reduced-motion:reduce){.like-panel,.like-excavator{animation:none!important}}
+
+.cf-anonymous .visitor-stat[hidden]{display:none}
