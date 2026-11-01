@@ -6,10 +6,10 @@
   const API = `https://counterapi.com/api/${NS}/${ACTION}/${KEY}`;
 
   function safeGet(key) {
-    try { if(cloudflare&&!window.TjoerringCounterConsent?.())return null;return localStorage.getItem(key); } catch { return null; }
+    try { if(cloudflare)return null;return localStorage.getItem(key); } catch { return null; }
   }
   function safeSet(key, value) {
-    try { if(cloudflare&&!window.TjoerringCounterConsent?.())return;localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
+    try { if(cloudflare)return;localStorage.setItem(key, value); } catch { /* Storage is optional. */ }
   }
 
   const style = document.createElement("style");
@@ -140,7 +140,7 @@
     const renderOdometer = value => { const el=document.getElementById("visitorOdometer"); const chars=String(Math.max(0,Math.floor(value))).padStart(6,"0").split(""); el.innerHTML=chars.map((c,i)=>`<span class="odometer-digit" style="animation-delay:${i*45}ms">${c}</span>`).join(""); };
     let deviceCounted=false;
     const countDevice=()=>{
-    if(cloudflare&&!window.TjoerringCounterConsent?.()){document.getElementById('visitorDevice').textContent='–';return;}
+    if(cloudflare){document.getElementById('visitorDevice').textContent='–';return;}
     if(deviceCounted)return;deviceCounted=true;
     const storedVisits = Number(safeGet("tjoerring-device-visits") || 0);
     const deviceVisits = (Number.isFinite(storedVisits) && storedVisits >= 0 ? storedVisits : 0) + 1;
@@ -165,16 +165,14 @@
     // Observe language changes only, never the counter's own text mutations.
     new MutationObserver(() => statuses.forEach(updateStatus)).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
     if (cloudflare) {
-      const label=document.getElementById('visitorUnique').nextElementSibling;label.dataset.counterOwned='true';
-      const labels={da:'Unikke browsere · 30 dage',en:'Unique browsers · 30 days',de:'Eindeutige Browser · 30 Tage',pl:'Unikalne przeglądarki · 30 dni'};
-      const update=()=>{label.textContent=labels[document.documentElement.lang]||labels.da;};update();
-      new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+      section.classList.add('cf-anonymous');
+      for(const id of ['visitorUnique','visitorDevice'])document.getElementById(id).parentElement.hidden=true;
     }
     [
       ["visitorTotal", API],
       ["visitorUnique", `${API}?readOnly=true&unique=true`],
       ["visitorToday", `${API}?readOnly=true&timeline=24h`]
-    ].forEach(async ([id, url]) => {
+    ].filter(([id])=>!cloudflare||id!=="visitorUnique").forEach(async ([id, url]) => {
       const field = document.getElementById(id);
       const cacheKey = `${cloudflare ? "tjoerring-cloudflare-v1" : "tjoerring-counter-v1"}:${NS}:${ACTION}:${KEY}:${id}`;
       let cached = null;

@@ -1,3 +1,10 @@
+# Current proposal
+
+See [ANONYMOUS-COUNTER.md](ANONYMOUS-COUNTER.md) for the automatic pageview and
+floating-like proposal. It supersedes the consent/unique-browser integration
+below, which describes the previously deployed version. Backend-first deployment
+is required after separate approval; nothing is deployed by this change.
+
 # Cloudflare counter integration for review
 
 The user has passed the real managed-Turnstile staging test for visits, likes,

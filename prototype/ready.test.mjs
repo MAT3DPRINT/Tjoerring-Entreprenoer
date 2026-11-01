@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {randomUUID} from 'node:crypto';
-import {ReadyCounter,collect} from './ready-counter.mjs';import {storage} from './sqlite-adapter.mjs';
+import {ReadyCounter,collect,anonymousView} from './ready-counter.mjs';import {storage} from './sqlite-adapter.mjs';
 const hash=n=>n.toString(16).padStart(64,'0');
 const setup=()=>{const s=storage();return {s,o:new ReadyCounter({storage:s},{})};};
 const req=(p,d)=>new Request('https://test'+p,{method:d?'POST':'GET',body:d?JSON.stringify(d):undefined});
@@ -77,4 +77,16 @@ test('daily admission limit survives minute changes; writes do not invalidate re
  assert.equal(o.gate(now+41*60000),false);
  assert.equal(o.stats(now).pageviews,0);o.record({event:hash(1),browser:hash(2)},now+1);
  assert.equal(o.stats(now+1000).pageviews,0);assert.equal(o.stats(now+61000).pageviews,1);s.db.close();
+});
+
+test('anonymous pageview deduplicates without storing browser identities',async()=>{
+ const {s,o}=setup(),id=randomUUID();const send=d=>anonymousView(new Request('https://test/v2/pageview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}),o);
+ const responses=await Promise.all(Array.from({length:10},()=>send({eventId:id})));
+ assert.equal(responses.filter(r=>r.status===202).length,1);assert.equal(responses.filter(r=>r.status===200).length,9);
+ assert.equal(o.stats(Date.now()).pageviews,1);assert.equal(o.stats(Date.now()).last24Hours,1);assert.equal(o.rows('SELECT * FROM browsers').length,0);assert.equal(o.rows('SELECT * FROM likes').length,0);
+ assert.equal((await send({eventId:randomUUID(),browserId:randomUUID()})).status,400);assert.equal((await send({eventId:'bad'})).status,400);
+ assert.equal((await send({eventId:randomUUID()})).status,202);assert.equal(o.rows('SELECT total FROM meta')[0].total,2);s.db.close();
+});
+test('anonymous pageviews retain the durable admission limit',async()=>{
+ const {s,o}=setup();for(let i=0;i<60;i++)o.gate(Date.now());const r=await anonymousView(new Request('https://test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventId:randomUUID()})}),o);assert.equal(r.status,429);assert.equal(o.rows('SELECT total FROM meta')[0].total,0);s.db.close();
 });
