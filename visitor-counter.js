@@ -1,4 +1,5 @@
 (() => {
+  const cloudflare = window.TjoerringCounterConfig?.provider === 'cloudflare';
   const NS = "mat3dprint.github.io";
   const ACTION = "view";
   const KEY = "tjoerring-entreprenoer-home";
@@ -88,6 +89,7 @@
         </div>
       </div>`;
     footer.insertAdjacentElement("beforebegin", section);
+    window.dispatchEvent(new Event("tjoerring:counter-mounted"));
 
     const introText = document.getElementById("visitorIntroText");
     const introMessages = [
@@ -107,6 +109,10 @@
     const fmt = n => new Intl.NumberFormat("da-DK").format(Number(n) || 0);
     const counterError = (kind, message) => Object.assign(new Error(message), {kind});
     const getValue = async url => {
+      if (cloudflare) {
+        if (!window.TjoerringCloudflarePrototype) throw new Error("Cloudflare configuration unavailable");
+        return window.TjoerringCloudflarePrototype.getValue(url);
+      }
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
       try {
@@ -153,13 +159,14 @@
     };
     // Observe language changes only, never the counter's own text mutations.
     new MutationObserver(() => statuses.forEach(updateStatus)).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
+    if (cloudflare) document.getElementById("visitorUnique").nextElementSibling.textContent = "Unikke browsere · 30 dage";
     [
       ["visitorTotal", API],
       ["visitorUnique", `${API}?readOnly=true&unique=true`],
       ["visitorToday", `${API}?readOnly=true&timeline=24h`]
     ].forEach(async ([id, url]) => {
       const field = document.getElementById(id);
-      const cacheKey = `tjoerring-counter-v1:${NS}:${ACTION}:${KEY}:${id}`;
+      const cacheKey = `${cloudflare ? "tjoerring-cloudflare-v1" : "tjoerring-counter-v1"}:${NS}:${ACTION}:${KEY}:${id}`;
       let cached = null;
       try {
         const entry = JSON.parse(safeGet(cacheKey));
@@ -181,6 +188,10 @@
       };
       const readUrl = new URL(url);
       readUrl.searchParams.set("readOnly", "true");
+      if (cloudflare) window.addEventListener('tjoerring:counter-refresh', async () => {
+        try { const value = await getValue(readUrl.href); state.updatedAt=Date.now();safeSet(cacheKey,JSON.stringify({value,updatedAt:state.updatedAt}));render(value);status.hidden=true;status.textContent=''; }
+        catch { status.hidden=false;updateStatus(state); }
+      }, {once:true});
       const retryDelays = [2000, 5000];
       for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
         try {
